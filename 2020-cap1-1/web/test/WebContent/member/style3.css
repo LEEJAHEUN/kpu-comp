@@ -1,0 +1,153 @@
+BODY { 
+	FONT-SIZE: 16pt; 
+	BACKGROUND-COLOR: #ffffff;
+	COLOR: black; 
+	LINE-HEIGHT: 160%; 
+	}
+	
+TABLE{
+	width:100%;
+	border-collapse: collapse;
+	border: 1px solid #ffffff;
+	PADDING: 20px;
+}
+
+TD { 
+	background-color: #FDD700;
+	border: 0;
+	padding: "10";
+	FONT-SIZE: 16pt;
+	COLOR: black;
+	LINE-HEIGHT: 160%;
+	PADDING: 10px;
+	FONT-FAMILY: "Malgun Gothic",verdana,tahoma ;
+	} 
+	
+SELECT { 
+	FONT-SIZE: 16pt; 
+	COLOR: black; 
+	LINE-HEIGHT: 160%; 
+	FONT-FAMILY: "Malgun Gothic",verdana,tahoma ;
+	}
+ 
+DIV { 
+	FONT-SIZE: 16pt; 
+	COLOR: black; 
+	LINE-HEIGHT: 160%; 
+	FONT-FAMILY: "Malgun Gothic",verdana,tahoma ;
+	}
+	
+FORM { 
+	FONT-SIZE: 16pt; 
+	COLOR: black; 
+	LINE-HEIGHT: 160%; 
+	FONT-FAMILY: "Malgun Gothic",verdana,tahoma ;
+	} 
+
+TEXTAREA { 
+	BORDER-RIGHT: 2px solid #999999;
+	BORDER-TOP: 2px solid #999999; 
+	BORDER-LEFT: 1px solid #999999;
+	BORDER-BOTTOM: 1px solid #999999;
+	FONT-SIZE: 16pt;
+	COLOR: BLACK;
+	FONT-FAMILY: "Malgun Gothic",verdana; 
+	BACKGROUND-COLOR: white;
+	}
+
+#pageMoving
+{
+    background-color:#FDD700;  
+    padding:10px;
+    border-radius: 5px;
+    float:left;
+}
+
+
+INPUT { 
+	BORDER-RIGHT: 3px solid #999999;
+	BORDER-TOP: 3px solid #999999;
+	BORDER-LEFT: 2px solid #999999;
+	FONT-SIZE: 16pt;
+	BORDER-BOTTOM: 2px solid #999999;
+	COLOR: BLACK;
+	FONT-FAMILY: "Malgun Gothic",verdana;
+	HEIGHT: 30px;
+	BACKGROUND-COLOR: white;
+	}
+
+#delete
+{
+	position: absolute;
+  	float:left;
+	FONT-SIZE: 16pt;
+	font-weight: bold;
+	BORDER: none;
+	border-radius: 5px;
+	color: BLACK;
+	BACKGROUND-COLOR: #FDD700;
+	HEIGHT: 35px;
+	FONT-FAMILY: "Malgun Gothic",verdana;
+	cursor: pointer;
+}
+input[type=button]
+{
+	FONT-SIZE: 16pt;
+	font-weight: bold;
+	BORDER: none;
+	border-radius: 5px;
+	color: BLACK;
+	BACKGROUND-COLOR: #FDD700;
+	HEIGHT: 35px;
+	FONT-FAMILY: "Malgun Gothic",verdana;
+	cursor: pointer;
+	
+}
+
+button#dropbtn
+{
+	background-color: #FDD700;
+	border-radius: 5px;
+	padding: 10px;
+	color: black;
+	FONT-SIZE: 16pt;
+	FONT-FAMILY: "Malgun Gothic",verdana;
+	BORDER: none;
+}
+
+#dropdown 
+{
+  position: relative;
+  float: right;
+  display: inline-block;
+}
+
+#dropdown-content
+{
+  display: none;
+  position: absolute;
+  float:right;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  border-radius: 5px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+#dropdown-content A:
+{
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+#dropdown-content a:hover {background-color: #ddd;}
+
+#dropdown:hover #dropdown-content{display: block;}
+
+#dropdown:hover #dropbtn{background-color: #befb4d;}
+
+A:link {text-decoration:none;color:#333333} 
+A:hover{text-decoration:yes;color:#66CCFF} 
+A:visited {text-decoration:none;color:#333333}
