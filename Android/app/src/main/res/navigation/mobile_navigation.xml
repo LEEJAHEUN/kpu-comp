@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/fragment_map">
+
+    <fragment
+        android:id="@+id/fragment_map"
+        android:name="com.example.mobilitySupport.map.MapFragment"
+        tools:layout="@layout/fragment_map">
+        <action
+            android:id="@+id/action_fragment_map_to_fragment_writePost"
+            app:destination="@id/fragment_writePost" />
+        <action
+            android:id="@+id/action_fragment_map_to_fragment_mypage"
+            app:destination="@id/fragment_mypage" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_writePost"
+        android:name="com.example.mobilitySupport.post.WritePostFragment"
+        tools:layout="@layout/fragment_choose_posttype" >
+        <action
+            android:id="@+id/action_fragment_writePost_to_fragment_point"
+            app:destination="@id/fragment_point" />
+    </fragment>
+<!--
+    <fragment
+        android:id="@+id/fragment_findRoute"
+        android:name="com.example.mobilitySupport.post.FindRouteFragment"
+        tools:layout="@layout/fragment_findroute" />
+-->
+    <fragment
+        android:id="@+id/fragment_mypage"
+        android:name="com.example.mobilitySupport.member.MypageFragment"
+        tools:layout="@layout/fragment_mypage"/>
+
+    <fragment
+        android:id="@+id/fragment_point"
+        android:name="com.example.mobilitySupport.ChoosePointFragment"
+        tools:layout="@layout/fragment_choose_point">
+        <action
+            android:id="@+id/action_fragment_point_to_fragment_writeRoad"
+            app:destination="@id/fragment_writeRoad" />
+        <action
+            android:id="@+id/action_fragment_point_to_fragment_writePlace"
+            app:destination="@id/fragment_writePlace" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_writeRoad"
+        android:name="com.example.mobilitySupport.post.RoadFragment"
+        tools:layout="@layout/writepost_road"/>
+
+    <fragment
+        android:id="@+id/fragment_writePlace"
+        android:name="com.example.mobilitySupport.post.PlaceFragment"
+        tools:layout="@layout/writepost_place"/>
+
+</navigation>
