@@ -6,7 +6,6 @@
 <head>
 <meta charset="utf-8">
 <title>내 제보글 관리</title>
-<%--그냥 표로 만들던가 관리자용이랑 같이쓰는 전용 css가 필요할듯 --%>
 <link href="style3.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -27,7 +26,6 @@
 		</div>
 		
 		<%--드롭다운 추가 --%>
-		<%--오래된 순 클릭시 제보글을 가져오면서 최신순과 위치가 바뀌게 할수 있나? --%>
 		<div id="dropdown">
 		  	<button id="dropbtn">
 		  		최신순으로 정렬
@@ -42,7 +40,6 @@
 	<div id="main">
 	<%-- 작성한 제보글 목록  등--%>
 		<table>
-		<%--제보글 불러와보고 길이(%)조절할것 --%>
 			<tr>
 				<td>
 					<b>번호 &emsp;</b>
@@ -61,7 +58,7 @@
 				</td>
 			</tr>
 			<%--작성한 제보글 목록을 불러옴 --%>
-			<%--페이지 번호도 넣을수있으면 넣음 --%>
+			<%--페이지 번호도 추가 --%>
 		</table>
 	</div>
 	

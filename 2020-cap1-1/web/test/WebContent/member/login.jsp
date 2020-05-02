@@ -51,7 +51,7 @@
 				
 				<tr> 
 				<%--로그인버튼 클릭시 로그인 체크후 맞으면 지도화면으로, 틀리면 로그인화면으로 이동 --%>
-				<%--아이디 비밀번호 찾기 클릭시 해당 페이지(수정해야함)로 이동 --%>
+				<%--아이디 비밀번호 찾기 클릭시 해당 페이지로 이동 --%>
 					<td colspan="2"> 
 						<input type="submit" value="로그인" >&nbsp; 
 						<input type="button" value="아이디/비밀번호 찾기" onClick="javascript:location.href='./###.jsp'"> 

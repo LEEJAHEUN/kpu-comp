@@ -12,10 +12,10 @@
 	src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=l7xxe03c36cd42194f0597280d25a140da4c">
 </script>
 <script type="text/javascript">
-	// 페이지가 로딩이 된 후 호출하는 함수입니다.
+	// 페이지가 로딩이 된 후 호출하는 함수
 	function initTmap(){
 		// map 생성
-		// Tmapv2.Map을 이용하여 지도의 초기좌표,지도가 들어갈 div, 넓이, 높이, 확대 정도를 설정합니다.
+		// Tmapv2.Map을 이용하여 지도의 초기좌표,지도가 들어갈 div, 넓이, 높이, 확대 정도를 설정
 		var map = new Tmapv2.Map("main", { 
 			center: new Tmapv2.LatLng(37.267103,127.033632),
 			width : "1000px", // 지도의 넓이
@@ -35,7 +35,6 @@
 		<div id="title">
 		<%--타이틀 부분 --%>
 		<%--검색창 배치 --%>
-		<%--search는 임의로 설정. 값 이름 바꿀 것 --%>
 		&emsp;&emsp;<input type="text" name="search" size=30 >
 		<%--검색 버튼 클릭시 onClick(검색)으로 넘어감--%>
 		<input type="button" value="검색" onClick="">

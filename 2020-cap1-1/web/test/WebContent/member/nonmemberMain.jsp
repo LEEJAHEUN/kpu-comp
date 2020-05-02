@@ -36,7 +36,6 @@
 		<div id="title">
 			<%--타이틀 부분 --%>
 			<%--검색창 배치 --%>
-			<%--search는 임의로 설정. 값 이름 바꿀 것 --%>
 			&emsp;&emsp;<input type="text" name="search" size=30 >
 			<%--검색 버튼 클릭시 onClick(검색)으로 넘어감--%>
 			<input type="button" value="검색" onClick="">
@@ -48,9 +47,8 @@
 	
 		<%--(왼쪽)메뉴 --%>
 		<div id="leftMenu">
-			<%--웹 정보 페이지 생성 후 링크 수정할것 --%>
 			<p><a href="./join.jsp">&emsp;회원가입</a>
-			<p><a href="./###.jsp">&emsp;웹 정보</a>
+			<p><a href="./.jsp">&emsp;웹 정보</a>
 		</div>
 		
 		<%--(오른쪽)메뉴 --%>
