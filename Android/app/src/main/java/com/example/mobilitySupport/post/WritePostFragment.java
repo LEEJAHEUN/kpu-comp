@@ -16,24 +16,31 @@ import androidx.navigation.Navigation;
 
 import com.example.mobilitySupport.MainActivity;
 import com.example.mobilitySupport.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class WritePostFragment extends Fragment {
 
     public String text = null;
     private Context context;
     ViewGroup view = null;
+    MainActivity activity = null;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        activity = (MainActivity) getActivity();
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final MainActivity activity = (MainActivity)getActivity();
         context = container.getContext();
         view = (ViewGroup) inflater.inflate(R.layout.fragment_choose_posttype, container, false);
 
-        SearchView searchView = getActivity().findViewById(R.id.search_view);
+        SearchView searchView = activity.findViewById(R.id.search_view);
         searchView.setVisibility(View.GONE);
 
-        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        Toolbar toolbar = activity.findViewById(R.id.toolbar);
         toolbar.setTitle("");
 
         Button buttonRoad = view.findViewById(R.id.writeRoad);

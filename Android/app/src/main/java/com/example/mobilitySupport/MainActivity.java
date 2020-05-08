@@ -4,40 +4,67 @@
 
 package com.example.mobilitySupport;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.viewpager.widget.ViewPager;
 
 import com.example.mobilitySupport.findRoute.FindRouteActivity;
-import com.example.mobilitySupport.post.PageAdaptor;
-import com.example.mobilitySupport.post.WritePostFragment;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Result;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
+import com.skt.Tmap.TMapView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback {
 
     private AppBarConfiguration mAppBarConfiguration;   // 네비게이션 드로어
-    WritePostFragment writePost= null;
-    TabLayout tabLayout;
-    ViewPager pager;
-    PageAdaptor adaptor;
+
+    LinearLayout linearLayout;
+    TMapView tMapView = null;
+    boolean isLocationPermission = false;               // 권한 설정 여부
+    final int CHECK_LOCATION_PERMISSION = 1;
+    private static GoogleApiClient googleApiClient;     // GPS 설정
+    protected LocationRequest request;
+    int REQUEST_CHECK_SETTINGS = 100;                   // GPS 설정 코드
+    LocationManager locationManager = null;
+
+    int updateTime = 1000;      // 현재 위치 갱신 시간
+    int updateDistance = 1;     // 현재 위치 갱신 이동 거리
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        writePost = new WritePostFragment();
 
         // 툴바 생성
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -47,8 +74,6 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.fragment_map)
                 .setDrawerLayout(drawer)
@@ -63,6 +88,18 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_view);
          */
+
+        linearLayout = (LinearLayout)findViewById(R.id.linearLayoutTmap);
+        tMapView = new TMapView(this);
+
+        tMapView.setSKTMapApiKey(getString(R.string.apiKey));
+        tMapView.setLanguage(TMapView.LANGUAGE_KOREAN);
+        tMapView.setIconVisibility(true); //현재위치로 표시될 아이콘을 표시할지 여부
+        tMapView.setZoomLevel(17);
+        tMapView.setMapType(TMapView.MAPTYPE_STANDARD);
+
+        linearLayout.addView(tMapView);
+        setGPS();
     }
 
     @Override
@@ -92,5 +129,133 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawers();
         else
             super.onBackPressed();
+    }
+
+    // 현재 위치 버튼 클릭 시
+    public void currentLocation(View view){
+        setGPS();
+    }
+
+    // 위치 리스너
+    private final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            if (location != null) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                tMapView.setLocationPoint(longitude, latitude);
+                tMapView.setCenterPoint(longitude, latitude);
+            } else
+                Toast.makeText(MainActivity.this, "위치 정보를 가져올 수 없습니다", Toast.LENGTH_LONG).show();
+        }
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) { }
+        @Override
+        public void onProviderEnabled(String provider) { }
+        @Override
+        public void onProviderDisabled(String provider) { }
+    };
+
+    // 현재 위치 받기
+    public void setGPS() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        checkPermission();
+        // 권한 승인 받았을 경우
+        if (isLocationPermission == true) {
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks((GoogleApiClient.ConnectionCallbacks) this)
+                    .addOnConnectionFailedListener((GoogleApiClient.OnConnectionFailedListener) this).build();
+            googleApiClient.connect();
+            request = LocationRequest.create();
+        }
+    }
+
+    // 위치 권한 체크
+    public void checkPermission() {
+        String[] permissions = new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // 권한 거부 상태
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // 권한 허용 창 요청
+                requestPermissions(permissions, CHECK_LOCATION_PERMISSION);
+            } else
+                isLocationPermission = true;
+
+        }
+    }
+
+    // 권한 요청 창에서 선택 시 호출
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case CHECK_LOCATION_PERMISSION :
+                // 권한 동의 성공
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    setGPS();
+                else
+                    Toast.makeText(this, "위치 권한을 승인해주십시오", Toast.LENGTH_LONG).show();
+                break;
+        }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(request);
+        builder.setAlwaysShow(true);
+        PendingResult result =
+                LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+        result.setResultCallback(this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) { }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) { }
+
+    @Override
+    public void onResult(Result result) {
+        final Status status = result.getStatus();
+
+        switch (status.getStatusCode()) {
+            case LocationSettingsStatusCodes.SUCCESS:
+                // GPS 설정 켜진 상태
+                checkPermission();
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updateTime, updateDistance, locationListener);
+                break;
+
+            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                // GPS 설정 꺼진 상태
+                try {
+                    status.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
+                } catch (IntentSender.SendIntentException e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CHECK_SETTINGS){
+            if(resultCode == RESULT_OK){
+                checkPermission();
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updateTime, updateDistance, locationListener);
+            }
+            else
+                Toast.makeText(this, "위치 사용 설정을 켜주십시오", Toast.LENGTH_LONG).show();
+        }
     }
 }

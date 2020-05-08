@@ -7,12 +7,6 @@
     tools:showIn="@layout/app_bar_main"
     tools:context=".map.MapFragment">
 
-    <LinearLayout
-        android:id="@+id/linearLayoutTmap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"></LinearLayout>
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_findRoute"
         android:layout_width="wrap_content"
@@ -36,17 +30,5 @@
         android:backgroundTint="@color/colorPrimary"
         app:backgroundTint="@color/colorPrimaryDark"
         app:srcCompat="@drawable/baseline_edit_white_48" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_currentLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left|bottom"
-        android:layout_marginLeft="15sp"
-        android:layout_marginBottom="50dp"
-
-        android:backgroundTint="@color/colorPrimary"
-        app:backgroundTint="@color/colorPrimaryDark"
-        app:srcCompat="@drawable/baseline_my_location_white_48" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
