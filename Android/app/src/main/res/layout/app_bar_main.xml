@@ -29,6 +29,40 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_currentLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|bottom"
+        android:layout_marginLeft="15sp"
+        android:layout_marginBottom="50dp"
+
+        android:backgroundTint="@color/colorPrimary"
+        android:onClick="currentLocation"
+        android:visibility="invisible"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:srcCompat="@drawable/baseline_my_location_white_48" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_currentLocation_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|bottom"
+        android:layout_marginLeft="15sp"
+        android:layout_marginBottom="160dp"
+
+        android:backgroundTint="@color/colorPrimary"
+        android:onClick="currentLocation"
+        android:visibility="invisible"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:srcCompat="@drawable/baseline_my_location_white_48" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutTmap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"></LinearLayout>
+
     <include layout="@layout/nav_host_fragment"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
