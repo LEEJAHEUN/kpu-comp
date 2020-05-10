@@ -5,7 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F1BC20"
-    tools:context=".post.WritePostFragment">
+    tools:context=".post.ChoosePostTypeFragment">
+
+    <Spinner
+        android:id="@+id/wheelchairSlope"
+        android:layout_width="107dp"
+        android:layout_height="53dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.861"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.42" />
 
     <ImageView
         android:id="@+id/imagechoose"
@@ -21,7 +32,7 @@
         tools:ignore="MissingConstraints" />
 
     <Spinner
-        android:id="@+id/Availability2"
+        android:id="@+id/Availability"
         android:layout_width="107dp"
         android:layout_height="53dp"
         android:spinnerMode="dropdown"
@@ -34,7 +45,7 @@
         app:layout_constraintVertical_bias="0.103" />
 
     <TextView
-        android:id="@+id/roadBreakage"
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="휠체어 경사로 유무"
@@ -49,7 +60,7 @@
         tools:ignore="MissingConstraints" />
 
     <Spinner
-        android:id="@+id/roadBreakage2"
+        android:id="@+id/elevator"
         android:layout_width="107dp"
         android:layout_height="53dp"
         android:spinnerMode="dropdown"
@@ -60,19 +71,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.253" />
-
-    <Spinner
-        android:id="@+id/slope2"
-        android:layout_width="107dp"
-        android:layout_height="53dp"
-        android:spinnerMode="dropdown"
-        android:textColor="#101010"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.861"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.412" />
 
     <Button
         android:id="@+id/reset"
@@ -90,7 +88,6 @@
         app:layout_constraintVertical_bias="0.882" />
 
     <TextView
-        android:id="@+id/stairs2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="엘리베이터 유무"
@@ -120,7 +117,6 @@
         app:layout_constraintVertical_bias="0.882" />
 
     <TextView
-        android:id="@+id/Availability"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="이용 가능한 정도"

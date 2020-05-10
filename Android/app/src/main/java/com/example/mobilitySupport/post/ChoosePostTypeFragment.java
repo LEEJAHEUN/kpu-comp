@@ -16,13 +16,8 @@ import androidx.navigation.Navigation;
 
 import com.example.mobilitySupport.MainActivity;
 import com.example.mobilitySupport.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class WritePostFragment extends Fragment {
-
-    public String text = null;
-    private Context context;
-    ViewGroup view = null;
+public class ChoosePostTypeFragment extends Fragment {
     MainActivity activity = null;
 
     @Override
@@ -34,8 +29,7 @@ public class WritePostFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
-        context = container.getContext();
-        view = (ViewGroup) inflater.inflate(R.layout.fragment_choose_posttype, container, false);
+        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_choose_posttype, container, false);
 
         SearchView searchView = activity.findViewById(R.id.search_view);
         searchView.setVisibility(View.GONE);
@@ -48,8 +42,19 @@ public class WritePostFragment extends Fragment {
 
         buttonRoad.setOnClickListener(new Button.OnClickListener(){
             @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.action_fragment_writePost_to_fragment_point);
+            public void onClick(View v) {   // 버튼 클릭시 다음 프래그먼트에 선택 타입 전달
+                ChoosePostTypeFragmentDirections.ActionFragmentWritePostToFragmentPoint action
+                        = ChoosePostTypeFragmentDirections.actionFragmentWritePostToFragmentPoint("road");
+                Navigation.findNavController(v).navigate(action);
+            }
+        });
+
+        buttonPlace.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v) {   // 위와 동일
+                ChoosePostTypeFragmentDirections.ActionFragmentWritePostToFragmentPoint action
+                        = ChoosePostTypeFragmentDirections.actionFragmentWritePostToFragmentPoint("place");
+                Navigation.findNavController(v).navigate(action);
             }
         });
 

@@ -4,11 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,12 +26,16 @@ import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapView;
 
-public class ChoosePointFragment extends Fragment  {
+import org.xml.sax.SAXException;
 
-    TMapView tMapView = null;
-    TextView address=null;
-    Context context = null;
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+public class ChoosePointFragment extends Fragment {
+
     MainActivity activity = null;
+    Button choosePoint = null;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -48,39 +55,27 @@ public class ChoosePointFragment extends Fragment  {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.fragment_choose_point, container, false);
 
-        Toolbar toolbar = activity.findViewById(R.id.toolbar);
+        final Toolbar toolbar = activity.findViewById(R.id.toolbar);
         toolbar.setTitle("지도에서 선택");
 
         FloatingActionButton currentButton = (FloatingActionButton)activity.findViewById(R.id.fab_currentLocation_point);
         currentButton.setVisibility(View.VISIBLE);
 
-        Button choosePoint = (Button)view.findViewById(R.id.choosePoint);
+        TextView address = view.findViewById(R.id.textView_address);
+        activity.setPoint(choosePoint, address);    // 중심 주소 받아오기
+
+        choosePoint = (Button)view.findViewById(R.id.choosePoint);
         choosePoint.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.action_fragment_point_to_fragment_writeRoad);
+                String postType = ChoosePointFragmentArgs.fromBundle(getArguments()).getPostType();
+                if(postType.equals("road"))     // 전 프래그먼트에서 길 선택했을 경우
+                    Navigation.findNavController(v).navigate(R.id.action_fragment_point_to_fragment_writeRoad);
+                else                            // 장소 선택했을 경우
+                    Navigation.findNavController(v).navigate(R.id.action_fragment_point_to_fragment_writePlace);
             }
         });
 
         return view;
     }
-
-    public void getPoint(TMapPoint center){
-        TMapMarkerItem mapMarkerItem = new TMapMarkerItem();
-        mapMarkerItem.setTMapPoint(center);
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_foreground);
-        mapMarkerItem.setIcon(bitmap);
-
-        tMapView.addMarkerItem(mapMarkerItem.getID(), mapMarkerItem);
-
-        TMapData tMapData = new TMapData();
-        tMapData.convertGpsToAddress(center.getLatitude(), center.getLongitude(),
-                new TMapData.ConvertGPSToAddressListenerCallback() {
-                    @Override
-                    public void onConvertToGPSToAddress(String s) {
-                        address.setText(s);
-                    }
-                });
-    }
-
 }

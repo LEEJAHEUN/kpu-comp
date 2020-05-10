@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/fragment_writePost"
-        android:name="com.example.mobilitySupport.post.WritePostFragment"
+        android:name="com.example.mobilitySupport.post.ChoosePostTypeFragment"
         tools:layout="@layout/fragment_choose_posttype" >
         <action
             android:id="@+id/action_fragment_writePost_to_fragment_point"
@@ -46,17 +46,33 @@
             app:destination="@id/fragment_writeRoad" />
         <action
             android:id="@+id/action_fragment_point_to_fragment_writePlace"
-            app:destination="@id/fragment_writePlace" />
+            app:destination="@id/fragment_writePlace"
+            />
+        <argument
+            android:name="postType"
+            app:argType="string" />
     </fragment>
 
     <fragment
         android:id="@+id/fragment_writeRoad"
         android:name="com.example.mobilitySupport.post.RoadFragment"
-        tools:layout="@layout/writepost_road"/>
+        tools:layout="@layout/writepost_road">
+        <action
+            android:id="@+id/action_fragment_writeRoad_to_fragment_map"
+            app:destination="@id/fragment_map"
+            app:popUpTo="@id/fragment_map"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_writePlace"
         android:name="com.example.mobilitySupport.post.PlaceFragment"
-        tools:layout="@layout/writepost_place"/>
+        tools:layout="@layout/writepost_place">
+        <action
+            android:id="@+id/action_fragment_writePlace_to_fragment_map"
+            app:destination="@id/fragment_map"
+            app:popUpTo="@id/fragment_map"
+            app:popUpToInclusive="true" />
+    </fragment>
 
 </navigation>

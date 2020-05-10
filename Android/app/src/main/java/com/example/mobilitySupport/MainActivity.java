@@ -16,7 +16,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,6 +44,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.material.navigation.NavigationView;
+import com.skt.Tmap.TMapAddressInfo;
+import com.skt.Tmap.TMapData;
+import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapView;
 
 public class MainActivity extends AppCompatActivity
@@ -60,6 +65,8 @@ public class MainActivity extends AppCompatActivity
 
     int updateTime = 1000;      // 현재 위치 갱신 시간
     int updateDistance = 1;     // 현재 위치 갱신 이동 거리
+
+    ChoosePointFragment choosePointfragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +96,7 @@ public class MainActivity extends AppCompatActivity
         actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_view);
          */
 
-        linearLayout = (LinearLayout)findViewById(R.id.linearLayoutTmap);
+        linearLayout = (LinearLayout) findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(this);
 
         tMapView.setSKTMapApiKey(getString(R.string.apiKey));
@@ -104,7 +111,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.findRoute:
                 Intent intent = new Intent(MainActivity.this, FindRouteActivity.class);
                 startActivity(intent);
@@ -117,23 +124,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
     @Override
-    public void onBackPressed(){
-        DrawerLayout drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+    public void onBackPressed() {
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         // 뒤로가기 눌러서 네비게이션 드로어 닫기
-        if(drawerLayout.isDrawerOpen(GravityCompat.START))
+        if (drawerLayout.isDrawerOpen(GravityCompat.START))
             drawerLayout.closeDrawers();
         else
             super.onBackPressed();
     }
 
     // 현재 위치 버튼 클릭 시
-    public void currentLocation(View view){
-        setGPS();
+    public void currentLocation(View view) { setGPS();
     }
 
     // 위치 리스너
@@ -148,10 +153,13 @@ public class MainActivity extends AppCompatActivity
             } else
                 Toast.makeText(MainActivity.this, "위치 정보를 가져올 수 없습니다", Toast.LENGTH_LONG).show();
         }
+
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) { }
+
         @Override
         public void onProviderEnabled(String provider) { }
+
         @Override
         public void onProviderDisabled(String provider) { }
     };
@@ -196,7 +204,7 @@ public class MainActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
-            case CHECK_LOCATION_PERMISSION :
+            case CHECK_LOCATION_PERMISSION:
                 // 권한 동의 성공
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     setGPS();
@@ -247,15 +255,60 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CHECK_SETTINGS){
-            if(resultCode == RESULT_OK){
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            if (resultCode == RESULT_OK) {
                 checkPermission();
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updateTime, updateDistance, locationListener);
-            }
-            else
+            } else
                 Toast.makeText(this, "위치 사용 설정을 켜주십시오", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void setPoint(final Button choosePoint, final TextView address) {
+        TMapPoint center = tMapView.getCenterPoint();
+        setAddress(address, center);
+        tMapView.setOnEnableScrollWithZoomLevelListener(new TMapView.OnEnableScrollWithZoomLevelCallback() {
+            @Override
+            public void onEnableScrollWithZoomLevelEvent(float v, TMapPoint tMapPoint) {
+                if (choosePoint != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() { choosePoint.setEnabled(false); }
+                    });
+                }
+            }
+        });
+
+        tMapView.setOnDisableScrollWithZoomLevelListener(new TMapView.OnDisableScrollWithZoomLevelCallback() {
+            @Override
+            public void onDisableScrollWithZoomLevelEvent(float v, final TMapPoint tMapPoint) {
+                if (choosePoint != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            choosePoint.setEnabled(true);
+                            setAddress(address, tMapPoint);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    public void setAddress(final TextView address, TMapPoint center) {
+        TMapData tMapData = new TMapData();
+        tMapData.reverseGeocoding(center.getLatitude(), center.getLongitude(), "A10", new TMapData.reverseGeocodingListenerCallback() {
+            @Override
+            public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
+                String str = tMapAddressInfo.strCity_do+" "+tMapAddressInfo.strGu_gun+" "
+                        + tMapAddressInfo.strLegalDong+" "+tMapAddressInfo.strBunji+" "
+                        + tMapAddressInfo.strRi+"\n"+tMapAddressInfo.strRoadName+" "+
+                        tMapAddressInfo.strBuildingIndex;
+                str = str.replaceAll("null", "");
+                address.setText(str);
+            }
+        });
     }
 }

@@ -1,13 +1,8 @@
-/*
-회원가입 구현 클래스
-
-회원가입 작성 완료(창 띄우기, 중복 아이디 확인-버튼?, 중복 메일 확인)
-이메일 인증
- */
-
 package com.example.mobilitySupport.join;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
@@ -34,7 +30,10 @@ import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mobilitySupport.R;
+import com.example.mobilitySupport.login.LoginActivity;
 import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,11 +54,13 @@ public class JoinActivity extends AppCompatActivity {
         setContentView(R.layout.join_activity);
 
         // spinner 초기화
-        final String[] data = getResources().getStringArray(R.array.spinnerArray);
+        final String[] data = getResources().getStringArray(R.array.spinnerArray_type);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, data);
         spinner = (Spinner) findViewById(R.id.chooseType);
         spinner.setAdapter(adapter);
 
+        id = (TextInputLayout)findViewById(R.id.TextInputLayout_join_id);
+        email = (TextInputLayout)findViewById(R.id.TextInputLayout_email);
 
         // 비밀번호 표시 온 오프 설정
         pw = (TextInputLayout) findViewById(R.id.TextInputLayout_join_PW);
@@ -112,9 +113,8 @@ public class JoinActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         }
-         */
 
-        String url = "http://172.30.1.1:8080/PHP_connection.php";
+        String url = "http://172.30.1.1:8080/login.php";
         //String url = "http://umul.dothome.co.kr/Android/postTest.php";
         //String url = "http://mydomain:7070/";
 
@@ -146,35 +146,69 @@ public class JoinActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Mysingleton.getmInstance(JoinActivity.this).addToRequestQueue(request);
 
+         */
+        //final EditText idText = (EditText) findViewById(R.id.register_ID);
+        //final EditText pwText = (EditText) findViewById(R.id.register_PW);
+        //final EditText mailText = (EditText) findViewById(R.id.register_email);
+        //final Spinner spinner = (Spinner)findViewById(R.id.chooseType);
+
+        String userID = id.getEditText().getText().toString();  //final ?
+        String userPassword = pw.getEditText().getText().toString();
+        String userMail = email.getEditText().getText().toString();
+        String userType = spinner.getSelectedItem().toString();
+
+        Response.Listener<String> responseListener = new Response.Listener<String> (){
+            @Override
+            public void onResponse(String response) {
+                try{
+                    Toast.makeText(JoinActivity.this, "", Toast.LENGTH_LONG).show();
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+                    if(success){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                        builder.setMessage("회원가입 완료")
+                                .setNegativeButton("확인", null)
+                                .create()
+                                .show();
+
+                        Intent intent = new Intent(JoinActivity.this, LoginActivity.class);
+                        JoinActivity.this.startActivity(intent);
+                    }
+                    else{
+                        AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                        builder.setMessage("회원가입 실패 : 입력한 정보를 다시 확인해주십시오.")
+                                .setNegativeButton("다시 시도", null)
+                                .create()
+                                .show();
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        JoinRequest JoinRequest = new JoinRequest(userID, userPassword, userMail, userType, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(JoinActivity.this);
+        queue.add(JoinRequest);
     }
 
 
     // 입력 초기화
     public void reset(View v) {
-        EditText id = (EditText) findViewById(R.id.register_ID);
-        EditText pw = (EditText) findViewById(R.id.register_PW);
-        EditText email = (EditText) findViewById(R.id.register_email);
-        Spinner type = (Spinner) findViewById(R.id.chooseType);
-
-        id.setText("");
-        pw.setText("");
-        email.setText("");
+        id.getEditText().setText("");
+        pw.getEditText().setText("");
+        email.getEditText().setText("");
         spinner.setAdapter(adapter);
+        pwCheck.getEditText().setText("");
     }
 
     public void textManage(){
-        id = (TextInputLayout)findViewById(R.id.TextInputLayout_join_id);
-        email = (TextInputLayout)findViewById(R.id.TextInputLayout_email);
+        String idText = id.getEditText().getText().toString();
+        String pwText = pw.getEditText().getText().toString();
+        String pwCheckText = pwCheck.getEditText().getText().toString();
+        String emailText = email.getEditText().getText().toString();
 
-        EditText idEditText = id.getEditText();
-        EditText pwEditText = pw.getEditText();
-        EditText pwCheckEditText = pwCheck.getEditText();
-        EditText emailEditText = email.getEditText();
-
-        String pwText = pwEditText.getText().toString();
-        String pwCheckText = pwCheckEditText.getText().toString();
-
-        if(idEditText.getText().toString().isEmpty())
+        if(idText.isEmpty())
             id.setError("아이디를 입력해주십시오");
         else { id.setError(null); }
 
@@ -184,11 +218,11 @@ public class JoinActivity extends AppCompatActivity {
 
         if(pwCheckText.isEmpty())
             pwCheck.setError("비밀번호를 확인해주십시오");
-        else if(!(pwCheckEditText.equals(pwText)))
+       else if(!(pwCheckText.equals(pwText)))
             pwCheck.setError("비밀번호와 다릅니다");
         else { pwCheck.setError(null);}
 
-        if(emailEditText.getText().toString().isEmpty())
+        if(emailText.isEmpty())
             email.setError("이메일 주소를 입력해주십시오");
         else { email.setError(null);}
 
