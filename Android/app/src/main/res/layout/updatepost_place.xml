@@ -51,7 +51,7 @@
         app:layout_constraintVertical_bias="0.45" />
 
     <TextView
-        android:id="@+id/elevator"
+        android:id="@+id/spinner_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
@@ -59,12 +59,12 @@
         android:text="휠체어 경사로 유무"
         android:textColor="#090808"
         android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/stairs"
+        app:layout_constraintEnd_toStartOf="@+id/spinner_type"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/wheelchairSlope" />
 
     <Spinner
-        android:id="@+id/breakage"
+        android:id="@+id/checkBox_breakage"
         android:layout_width="107dp"
         android:layout_height="56dp"
         android:layout_marginTop="20dp"
@@ -75,7 +75,7 @@
         app:layout_constraintTop_toBottomOf="@+id/stairs2" />
 
     <TextView
-        android:id="@+id/stairs"
+        android:id="@+id/spinner_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="108dp"
@@ -100,7 +100,7 @@
         app:layout_constraintTop_toBottomOf="@+id/Availability" />
 
     <Spinner
-        android:id="@+id/stairs"
+        android:id="@+id/spinner_type"
         android:layout_width="107dp"
         android:layout_height="61dp"
         android:layout_marginEnd="40dp"
@@ -109,7 +109,7 @@
         android:textColor="#101010"
         app:layout_constraintBottom_toTopOf="@+id/imagechoose"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/breakage" />
+        app:layout_constraintTop_toBottomOf="@+id/checkBox_breakage" />
 
     <TextView
         android:id="@+id/Availability"
@@ -151,7 +151,7 @@
         app:layout_constraintVertical_bias="0.037" />
 
     <TextView
-        android:id="@+id/elevator"
+        android:id="@+id/spinner_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
@@ -159,10 +159,10 @@
         android:text="엘리베이터 유무"
         android:textColor="#070707"
         android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/breakage"
+        app:layout_constraintEnd_toStartOf="@+id/checkBox_breakage"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stairs"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_type"
         tools:ignore="MissingConstraints" />
 
     <ImageButton

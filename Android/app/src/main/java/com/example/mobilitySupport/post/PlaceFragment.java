@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
@@ -23,15 +25,18 @@ public class PlaceFragment extends Fragment {
 
     private static final int RESULT_OK = 0; // 검색
     String[] data_Availability = null;
-    String[] data_twoChoice = null;
+    String[] data_type = null;
     ImageView imageview = null;
     Spinner spinner_availability = null;
-    Spinner spinner_elevator = null;
-    Spinner spinner_wheel = null;
+    Spinner spinner_type = null;
+    CheckBox elevator = null;
+    CheckBox wheel = null;
     ArrayAdapter<String> adapter_availability = null;
-    ArrayAdapter<String> adapter_twoChoice = null;
+    ArrayAdapter<String> adapter_type = null;
 
     private final int GET_GALLERY_IMAGE = 200;
+    Boolean checkElevator = false;  // true 일 경우 서버에 값 전달
+    Boolean checkWheel = false;     //
 
     @Nullable
     @Override
@@ -42,18 +47,40 @@ public class PlaceFragment extends Fragment {
         toolbar.setTitle("제보글 작성");
 
         data_Availability = getActivity().getResources().getStringArray(R.array.spinnerArray_Availability);
-        data_twoChoice = getResources().getStringArray(R.array.spinnerArray_twoChoice);
+        data_type = getResources().getStringArray(R.array.spinnerArray_type);
 
         adapter_availability = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, data_Availability);
         spinner_availability = (Spinner)view.findViewById(R.id.Availability);
         spinner_availability.setAdapter(adapter_availability);
 
-        adapter_twoChoice = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line,data_twoChoice);
-        spinner_elevator = (Spinner)view.findViewById(R.id.elevator);
-        spinner_elevator.setAdapter(adapter_twoChoice);
+        adapter_type = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, data_type);
+        spinner_type = (Spinner)view.findViewById(R.id.spinner_type);
+        spinner_type.setAdapter(adapter_type);
 
-        spinner_wheel = (Spinner)view.findViewById(R.id.wheelchairSlope);
-        spinner_wheel.setAdapter(adapter_twoChoice);
+        elevator = view.findViewById(R.id.checkBox_elevator);
+        wheel = view.findViewById(R.id.checkBox_wheel);
+
+        elevator.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                checkElevator = true;
+                if(isChecked)
+                    elevator.setText("있음");
+                else
+                    elevator.setText("없음");
+            }
+        });
+
+        wheel.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                checkWheel = true;
+                if(isChecked)
+                    wheel.setText("있음");
+                else
+                    wheel.setText("없음");
+            }
+        });
 
         imageview = (ImageView)view.findViewById(R.id.imagechoose);
         imageview.setOnClickListener(new View.OnClickListener() {
@@ -69,17 +96,19 @@ public class PlaceFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 spinner_availability.setAdapter(adapter_availability);
-                spinner_elevator.setAdapter(adapter_twoChoice);
-                spinner_wheel.setAdapter(adapter_twoChoice);
+                spinner_type.setAdapter(adapter_type);
+                elevator.setChecked(false);
+                wheel.setChecked(false);
                 // 이미지 뷰 초기화
+                checkElevator = false; checkWheel = false;
             }
         });
 
         Button writeFin = view.findViewById(R.id.writeFin);
         writeFin.setOnClickListener(new Button.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.action_fragment_writePlace_to_fragment_map);
+            public void onClick(View v) { // 작성 완료 버튼 클릭 시
+                Navigation.findNavController(v).navigate(R.id.action_fragment_writePlace_to_fragment_map); // 화면 이동
             }
         });
         return view;

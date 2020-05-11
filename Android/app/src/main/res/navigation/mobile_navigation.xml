@@ -14,7 +14,8 @@
             app:destination="@id/fragment_writePost" />
         <action
             android:id="@+id/action_fragment_map_to_fragment_mypage"
-            app:destination="@id/fragment_mypage" />
+            app:destination="@id/fragment_mypage"
+            app:launchSingleTop="false" />
 
     </fragment>
 

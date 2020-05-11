@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -29,6 +30,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.mobilitySupport.findRoute.FindRouteActivity;
+import com.example.mobilitySupport.login.LoginActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -48,6 +50,9 @@ import com.skt.Tmap.TMapView;
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback {
 
+    private SharedPreferences appData;
+    String id = null;   // 받아올 사용자 아이디
+
     private AppBarConfiguration mAppBarConfiguration;   // 네비게이션 드로어
 
     LinearLayout linearLayout;
@@ -62,6 +67,10 @@ public class MainActivity extends AppCompatActivity
     int updateTime = 1000;      // 현재 위치 갱신 시간
     int updateDistance = 1;     // 현재 위치 갱신 이동 거리
 
+    NavController navController;
+    Intent intent = null;
+    DrawerLayout drawer = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,14 +81,15 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // 네비게이션 드로어 생성
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.fragment_map)
                 .setDrawerLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
         // NavigationUI는 AppBarConfiguration 객체 사용하여 탐색 버튼 관리
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
@@ -89,6 +99,34 @@ public class MainActivity extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_view);
          */
+        View nav_header = navigationView.getHeaderView(0);
+        TextView loginInfo = nav_header.findViewById(R.id.mypage_or_login);
+        TextView info = nav_header.findViewById(R.id.information);
+
+        appData = getSharedPreferences("appData", MODE_PRIVATE);
+        id = appData.getString("ID", "");   // 로그인 정보
+
+        if(!(id.equals(""))) {  // 로그인 상태일 경우
+            loginInfo.setText(id+"님 로그인 중");
+            info.setText("환영합니다!");
+            navigationView.getMenu().findItem(R.id.logout).setVisible(true);
+            navigationView.getMenu().findItem(R.id.mypage).setVisible(true);
+        }
+
+        loginInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(id.equals("")) {
+                    intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else {
+                    drawer.closeDrawers();
+                    navController.navigate(R.id.action_fragment_map_to_fragment_mypage);
+                }
+            }
+        });
 
         linearLayout = (LinearLayout) findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(this);
@@ -105,11 +143,35 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        SharedPreferences.Editor editor = appData.edit();
+
         switch (item.getItemId()) {
             case R.id.findRoute:
-                Intent intent = new Intent(MainActivity.this, FindRouteActivity.class);
+                intent = new Intent(MainActivity.this, FindRouteActivity.class);
                 startActivity(intent);
+                finish();
                 return true;
+
+            case R.id.logout:
+                editor.clear();     // 로그인 정보 삭제
+                editor.commit();
+                intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);  // 로그인 화면으로 이동
+                finish();
+                return true;
+
+            case R.id.mypage:
+                if(id.equals(""))
+                    Toast.makeText(MainActivity.this,R.string.noLogin,Toast.LENGTH_LONG).show();
+                else
+                    navController.navigate(R.id.action_fragment_map_to_fragment_mypage);
+
+            case R.id.writePost:
+                if(id.equals(""))
+                    Toast.makeText(MainActivity.this,R.string.noLogin,Toast.LENGTH_LONG).show();
+                else
+                    navController.navigate(R.id.action_fragment_map_to_fragment_writePost);
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -123,17 +185,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         // 뒤로가기 눌러서 네비게이션 드로어 닫기
-        if (drawerLayout.isDrawerOpen(GravityCompat.START))
-            drawerLayout.closeDrawers();
+        if (drawer.isDrawerOpen(GravityCompat.START))
+            drawer.closeDrawers();
         else
             super.onBackPressed();
     }
 
     // 현재 위치 버튼 클릭 시
-    public void currentLocation(View view) { setGPS();
-    }
+    public void currentLocation(View view) { setGPS(); }
 
     // 위치 리스너
     private final LocationListener locationListener = new LocationListener() {
@@ -147,13 +207,10 @@ public class MainActivity extends AppCompatActivity
             } else
                 Toast.makeText(MainActivity.this, "위치 정보를 가져올 수 없습니다", Toast.LENGTH_LONG).show();
         }
-
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) { }
-
         @Override
         public void onProviderEnabled(String provider) { }
-
         @Override
         public void onProviderDisabled(String provider) { }
     };
@@ -219,7 +276,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnectionSuspended(int i) { }
-
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) { }
 

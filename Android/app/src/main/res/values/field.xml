@@ -3,14 +3,15 @@
     <string-array name="spinnerArray_type">
         <item> 선택 </item>
         <item> 임산부 </item>
-        <item> 휠체어</item>
+        <item> 휠체어 이용자</item>
         <item> 보조기구 이용자 </item>
     </string-array>
 
-    <string-array name="spinnerArray_twoChoice">
+    <string-array name="spinnerArray_angle">
         <item> 선택 </item>
-        <item> 있음 </item>
-        <item> 없음 </item>
+        <item> 낮음 </item>
+        <item> 중간 </item>
+        <item> 높음 </item>
     </string-array>
 
     <string-array name="spinnerArray_Availability">

@@ -11,6 +11,7 @@
 package com.example.mobilitySupport.login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -33,26 +34,32 @@ public class LoginActivity<item> extends AppCompatActivity {
     TextInputLayout inputLayoutID = null;  // id 입력창
     TextInputLayout inputLayoutPW = null; // pw 입력창
 
+    private SharedPreferences appData;
+
+    String userID = null;
+    String userPassword = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+
+        appData = getSharedPreferences("appData", MODE_PRIVATE);
 
         // 비밀번호 표시 온 오프 설정
         inputLayoutPW = (TextInputLayout)findViewById(R.id.textInputLayoutPW);
         inputLayoutPW.setPasswordVisibilityToggleEnabled(true);
     }
 
-    public void login(View v) {
+    public void login(final View v) {
         // 입력창 에러 관리
         manageInputError();
 
-        final EditText idText = (EditText) findViewById(R.id.insert_ID);
-        final EditText pwText = (EditText) findViewById(R.id.insert_PW);
-        final Button loginButton = (Button) findViewById(R.id.loginButton);
+        EditText idText = (EditText) findViewById(R.id.insert_ID);
+        EditText pwText = (EditText) findViewById(R.id.insert_PW);
 
-        final String userID = idText.getText().toString();
-        final String userPassword = pwText.getText().toString();
+        userID = idText.getText().toString();
+        userPassword = pwText.getText().toString();
 
         Response.Listener<String>  responseListener = new Response.Listener<String> (){
             @Override
@@ -61,15 +68,9 @@ public class LoginActivity<item> extends AppCompatActivity {
                     JSONObject jsonResponse = new JSONObject(response);
                     boolean success = jsonResponse.getBoolean("success");
                     if(success){
-                        String userID = jsonResponse.getString("userID");
-                        String userPassword = jsonResponse.getString("userPassword");
-
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-
-                        intent.putExtra("userID",userID);
-                        intent.putExtra("userPassword",userPassword);
-                        LoginActivity.this.startActivity(intent);
-                        finish();
+                        String id = jsonResponse.getString("userID");
+                        save(id);
+                        nonMember(v);
                     }
                     else{
                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
@@ -121,5 +122,13 @@ public class LoginActivity<item> extends AppCompatActivity {
             inputLayoutPW.setError("비밀번호를 입력해주십시오");
         }
         else { inputLayoutPW.setError(null); }
+    }
+
+    private void save(String userID){
+        SharedPreferences.Editor editor = appData.edit();
+        editor.putString("ID", userID);
+        editor.putBoolean("SAVE_LOGIN_DATA", true);
+        editor.apply();
+        editor.commit();
     }
 }
