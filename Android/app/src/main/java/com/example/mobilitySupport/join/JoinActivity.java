@@ -1,42 +1,23 @@
 package com.example.mobilitySupport.join;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Cache;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Network;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mobilitySupport.R;
 import com.example.mobilitySupport.login.LoginActivity;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class JoinActivity extends AppCompatActivity {
 
@@ -69,88 +50,9 @@ public class JoinActivity extends AppCompatActivity {
         pwCheck.setPasswordVisibilityToggleEnabled(true);
     }
 
-    Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            Bundle bundle = msg.getData();
-            String result = bundle.getString("RESULT");
-            TextView test = (TextView) findViewById(R.id.chooseTypeText);
-            test.setText(result);
-        }
-    };
-
     // 작성완료
     public void writeFin(View v) {
         textManage();
-        /*
-        final JoinJSONTask joinJSONTask = new JoinJSONTask();
-        //joinJSONTask.execute("http://172.30.1.1:3000/signup");
-        joinJSONTask.execute("http://127.0.0.1:3000/signup");
-        //String check = joinJSONTask.doInBackground();
-
-        new Thread() {
-            public void run() {
-                String check = joinJSONTask.doInBackground();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("RESULT", check);
-                Message message = handler.obtainMessage();
-                message.setData(bundle);
-                handler.sendMessage(message);
-            }
-        }.start();
-
-
-         */
-        // test
-        //TextView test = (TextView)findViewById(R.id.chooseTypeText);
-        //test.setText(check);
-
-        /*
-        if(check.equals("ok")){
-            // 회원가입 완료 창 띄우기
-
-            // 로그인 화면으로 이동
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
-        }
-
-        String url = "http://172.30.1.1:8080/login.php";
-        //String url = "http://umul.dothome.co.kr/Android/postTest.php";
-        //String url = "http://mydomain:7070/";
-
-        StringRequest request = new StringRequest(
-                Request.Method.GET,
-                url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //JSONObject object = new JSONObject(response);
-                        Toast.makeText(JoinActivity.this, response, Toast.LENGTH_LONG).show();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(JoinActivity.this, error.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }
-        ){
-            protected Map<String, String> getParams() throws AuthFailureError{
-                Map<String, String> params = new HashMap<String, String>();
-                return params;
-            }
-        };
-
-        request.setShouldCache(false);
-        request.setRetryPolicy(new DefaultRetryPolicy(3000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        Mysingleton.getmInstance(JoinActivity.this).addToRequestQueue(request);
-
-         */
-        //final EditText idText = (EditText) findViewById(R.id.register_ID);
-        //final EditText pwText = (EditText) findViewById(R.id.register_PW);
-        //final EditText mailText = (EditText) findViewById(R.id.register_email);
-        //final Spinner spinner = (Spinner)findViewById(R.id.chooseType);
 
         String userID = id.getEditText().getText().toString();  //final ?
         String userPassword = pw.getEditText().getText().toString();
@@ -226,35 +128,6 @@ public class JoinActivity extends AppCompatActivity {
             email.setError("이메일 주소를 입력해주십시오");
         else { email.setError(null);}
 
-    }
-
-    public static class Mysingleton{
-        private RequestQueue mRequestQueue;
-        private Context context;
-        private static Mysingleton mInstance;
-
-        public Mysingleton(Context context){
-            this.context = context;
-            mRequestQueue = getmRequestQueue();
-        }
-        public RequestQueue getmRequestQueue(){
-            if(mRequestQueue == null){
-                Cache cache = new DiskBasedCache(context.getCacheDir(), 1024*1024);
-                Network network = new BasicNetwork(new HurlStack());
-                mRequestQueue = new RequestQueue(cache, network);
-                mRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
-            }
-            return mRequestQueue;
-        }
-        public static synchronized Mysingleton getmInstance(Context context){
-            if(mInstance == null)
-                mInstance = new Mysingleton(context);
-            return mInstance;
-        }
-
-        public <T> void addToRequestQueue(Request<T> request){
-            mRequestQueue.add(request);
-        }
     }
 }
 

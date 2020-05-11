@@ -1,4 +1,4 @@
-package com.example.mobilitySupport.join;
+package com.example.mobilitySupport.login;
 
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
@@ -6,19 +6,16 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JoinRequest extends StringRequest {
+public class LoginRequest extends StringRequest {
 
-    final static private String URL = "http://121.168.1.81/register.php";
+    final static private String URL = "http://121.168.1.81/login.php";
     private Map<String, String> parameters;
 
-    public JoinRequest(String userID, String userPassword, String userMail, String userType, Response.Listener<String> listener){
+    public LoginRequest(String userID, String userPassword, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);//해당 URL에 POST방식으로 파마미터들을 전송함
         parameters = new HashMap<>();
         parameters.put("userID", userID);
         parameters.put("userPassword", userPassword);
-        parameters.put("userMail", userMail);
-        parameters.put("userType",userType);
-        //parameters.put("userType",userType);
     }
 
     protected Map<String, String> getParams(){

@@ -13,14 +13,21 @@ package com.example.mobilitySupport.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.example.mobilitySupport.join.JoinActivity;
 import com.example.mobilitySupport.MainActivity;
 import com.example.mobilitySupport.R;
 import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONObject;
 
 public class LoginActivity<item> extends AppCompatActivity {
     TextInputLayout inputLayoutID = null;  // id 입력창
@@ -36,27 +43,57 @@ public class LoginActivity<item> extends AppCompatActivity {
         inputLayoutPW.setPasswordVisibilityToggleEnabled(true);
     }
 
-    // 로그인 버튼 클릭 시
-    // 아직 구현 전
     public void login(View v) {
         // 입력창 에러 관리
         manageInputError();
-        //new LoginJSONTask().execute("http://127.0.0.1:3000/");
-        // 서버 연결 코드
 
-        /*
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-         */
+        final EditText idText = (EditText) findViewById(R.id.insert_ID);
+        final EditText pwText = (EditText) findViewById(R.id.insert_PW);
+        final Button loginButton = (Button) findViewById(R.id.loginButton);
+
+        final String userID = idText.getText().toString();
+        final String userPassword = pwText.getText().toString();
+
+        Response.Listener<String>  responseListener = new Response.Listener<String> (){
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+                    if(success){
+                        String userID = jsonResponse.getString("userID");
+                        String userPassword = jsonResponse.getString("userPassword");
+
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+                        intent.putExtra("userID",userID);
+                        intent.putExtra("userPassword",userPassword);
+                        LoginActivity.this.startActivity(intent);
+                        finish();
+                    }
+                    else{
+                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                        builder.setMessage("로그인 실패")
+                                .setNegativeButton("다시 시도", null)
+                                .create()
+                                .show();
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        LoginRequest loginRequest = new LoginRequest(userID, userPassword, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+        queue.add(loginRequest);
     }
 
-    // 회원가입 버튼 클릭 시
     public void signUp(View v) {
         Intent intent = new Intent(getApplicationContext(), JoinActivity.class);
         startActivity(intent);
     }
 
-    // 비회원 이용 버튼 클릭 시
     public void nonMember(View v) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
@@ -64,7 +101,6 @@ public class LoginActivity<item> extends AppCompatActivity {
     }
 
     // 아이디 비번 찾기 버튼 클릭 시
-    //  화면 구현 필요
     public void findIDPW(View v) {
 
     }

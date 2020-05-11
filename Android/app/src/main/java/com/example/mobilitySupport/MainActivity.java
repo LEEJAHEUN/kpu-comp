@@ -1,7 +1,3 @@
-/*
-메인 화면 구현 클래스
- */
-
 package com.example.mobilitySupport;
 
 import android.Manifest;
@@ -65,8 +61,6 @@ public class MainActivity extends AppCompatActivity
 
     int updateTime = 1000;      // 현재 위치 갱신 시간
     int updateDistance = 1;     // 현재 위치 갱신 이동 거리
-
-    ChoosePointFragment choosePointfragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
