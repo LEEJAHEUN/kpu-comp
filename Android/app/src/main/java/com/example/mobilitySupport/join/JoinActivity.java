@@ -63,7 +63,6 @@ public class JoinActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try{
-                    Toast.makeText(JoinActivity.this, "", Toast.LENGTH_LONG).show();
                     JSONObject jsonResponse = new JSONObject(response);
                     boolean success = jsonResponse.getBoolean("success");
                     if(success){
@@ -73,8 +72,10 @@ public class JoinActivity extends AppCompatActivity {
                                 .create()
                                 .show();
 
+                        // 확인 클릭 시 이동할 수 있게
                         Intent intent = new Intent(JoinActivity.this, LoginActivity.class);
                         JoinActivity.this.startActivity(intent);
+                        finish();
                     }
                     else{
                         AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);

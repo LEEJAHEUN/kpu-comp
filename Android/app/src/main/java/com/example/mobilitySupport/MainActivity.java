@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
     int updateTime = 1000;      // 현재 위치 갱신 시간
     int updateDistance = 1;     // 현재 위치 갱신 이동 거리
 
-    NavController navController;
+    NavController navController = null;
     Intent intent = null;
     DrawerLayout drawer = null;
 
@@ -76,29 +76,18 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 툴바 생성
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // 네비게이션 드로어 생성
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
-
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.fragment_map)
-                .setDrawerLayout(drawer)
-                .build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.fragment_map).setDrawerLayout(drawer).build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
-        // NavigationUI는 AppBarConfiguration 객체 사용하여 탐색 버튼 관리
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        /* 메뉴 버튼 바꾸어주는 코드
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_view);
-         */
         View nav_header = navigationView.getHeaderView(0);
         TextView loginInfo = nav_header.findViewById(R.id.mypage_or_login);
         TextView info = nav_header.findViewById(R.id.information);
@@ -113,13 +102,12 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().findItem(R.id.mypage).setVisible(true);
         }
 
-        loginInfo.setOnClickListener(new View.OnClickListener() {
+        loginInfo.setOnClickListener(new View.OnClickListener() {   // 헤더 클릭 시
             @Override
             public void onClick(View v) {
                 if(id.equals("")) {
                     intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
-                    finish();
                 }
                 else {
                     drawer.closeDrawers();
@@ -130,7 +118,6 @@ public class MainActivity extends AppCompatActivity
 
         linearLayout = (LinearLayout) findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(this);
-
         tMapView.setSKTMapApiKey(getString(R.string.apiKey));
         tMapView.setLanguage(TMapView.LANGUAGE_KOREAN);
         tMapView.setIconVisibility(true); //현재위치로 표시될 아이콘을 표시할지 여부
@@ -143,8 +130,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        SharedPreferences.Editor editor = appData.edit();
-
         switch (item.getItemId()) {
             case R.id.findRoute:
                 intent = new Intent(MainActivity.this, FindRouteActivity.class);
@@ -153,8 +138,8 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
             case R.id.logout:
-                editor.clear();     // 로그인 정보 삭제
-                editor.commit();
+                SharedPreferences.Editor editor = appData.edit();
+                editor.clear(); editor.commit(); // 로그인 정보 삭제
                 intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);  // 로그인 화면으로 이동
                 finish();
@@ -163,14 +148,20 @@ public class MainActivity extends AppCompatActivity
             case R.id.mypage:
                 if(id.equals(""))
                     Toast.makeText(MainActivity.this,R.string.noLogin,Toast.LENGTH_LONG).show();
-                else
+                else {
+                    drawer.closeDrawers();
                     navController.navigate(R.id.action_fragment_map_to_fragment_mypage);
+                }
+                return true;
 
             case R.id.writePost:
                 if(id.equals(""))
                     Toast.makeText(MainActivity.this,R.string.noLogin,Toast.LENGTH_LONG).show();
-                else
+                else {
+                    drawer.closeDrawers();
                     navController.navigate(R.id.action_fragment_map_to_fragment_writePost);
+                }
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -347,7 +338,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void setAddress(final TextView address, TMapPoint center) {
+    public void setAddress(final TextView address, final TMapPoint center) {
         TMapData tMapData = new TMapData();
         tMapData.reverseGeocoding(center.getLatitude(), center.getLongitude(), "A10", new TMapData.reverseGeocodingListenerCallback() {
             @Override
@@ -361,4 +352,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
+    public TMapPoint getCenter(){return tMapView.getCenterPoint();}
 }

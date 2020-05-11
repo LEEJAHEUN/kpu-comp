@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +15,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.mobilitySupport.post.ChoosePostTypeFragmentDirections;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.skt.Tmap.TMapPoint;
 
 public class ChoosePointFragment extends Fragment {
 
@@ -46,17 +49,25 @@ public class ChoosePointFragment extends Fragment {
         currentButton.setVisibility(View.VISIBLE);
 
         TextView address = view.findViewById(R.id.textView_address);
-        activity.setPoint(choosePoint, address);    // 중심 주소 받아오기
-
         choosePoint = (Button)view.findViewById(R.id.choosePoint);
+
+        activity.setPoint(choosePoint, address);    // 중심 주소 표시
         choosePoint.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View v) {
                 String postType = ChoosePointFragmentArgs.fromBundle(getArguments()).getPostType();
-                if(postType.equals("road"))     // 전 프래그먼트에서 길 선택했을 경우
-                    Navigation.findNavController(v).navigate(R.id.action_fragment_point_to_fragment_writeRoad);
-                else                            // 장소 선택했을 경우
-                    Navigation.findNavController(v).navigate(R.id.action_fragment_point_to_fragment_writePlace);
+                TMapPoint center = activity.getCenter();
+                Double latitude = center.getLatitude(); Double longitude = center.getLongitude();
+                if(postType.equals("road")) {    // 전 프래그먼트에서 길 선택했을 경우
+                    ChoosePointFragmentDirections.ActionFragmentPointToFragmentWriteRoad roadPoint =
+                            ChoosePointFragmentDirections.actionFragmentPointToFragmentWriteRoad(latitude.toString(), longitude.toString());
+                    Navigation.findNavController(v).navigate(roadPoint);
+                }
+                else {                            // 장소 선택했을 경우
+                    ChoosePointFragmentDirections.ActionFragmentPointToFragmentWritePlace placePoint =
+                            ChoosePointFragmentDirections.actionFragmentPointToFragmentWritePlace(latitude.toString(), longitude.toString());
+                    Navigation.findNavController(v).navigate(placePoint);
+                }
             }
         });
 

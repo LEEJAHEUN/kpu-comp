@@ -1,6 +1,8 @@
 package com.example.mobilitySupport.post;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +24,8 @@ import androidx.navigation.Navigation;
 import com.example.mobilitySupport.R;
 
 public class RoadFragment extends Fragment {
+    private SharedPreferences appData;
+    String id = null;   // 받아올 사용자 아이디
 
     private static final int RESULT_OK = 0; // 검색
     String[] data_Availability = null;
@@ -47,6 +51,7 @@ public class RoadFragment extends Fragment {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.writepost_road, container, false);
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("제보글 작성");
+        appData = getActivity().getSharedPreferences("appData", Context.MODE_PRIVATE);
 
         data_Availability = getActivity().getResources().getStringArray(R.array.spinnerArray_Availability);
         data_type = getResources().getStringArray(R.array.spinnerArray_type);
@@ -111,6 +116,11 @@ public class RoadFragment extends Fragment {
                 checkStairs = false; checkBreakage = false;
             }
         });
+
+        String lat = RoadFragmentArgs.fromBundle(getArguments()).getLatitude();
+        String lon = RoadFragmentArgs.fromBundle(getArguments()).getLongitude();
+        Double latitude = Double.parseDouble(lat); Double longitude = Double.parseDouble(lon);  // 위도, 경도
+        id = appData.getString("ID", "");   // 로그인 정보
 
         Button writeFin = view.findViewById(R.id.writeFin);
         writeFin.setOnClickListener(new Button.OnClickListener() {

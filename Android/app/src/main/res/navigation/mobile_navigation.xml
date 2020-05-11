@@ -63,6 +63,10 @@
             app:destination="@id/fragment_map"
             app:popUpTo="@id/fragment_map"
             app:popUpToInclusive="true" />
+        <argument android:name="latitude"
+            app:argType="string" />
+        <argument android:name="longitude"
+            app:argType="string" />
     </fragment>
 
     <fragment
@@ -74,6 +78,12 @@
             app:destination="@id/fragment_map"
             app:popUpTo="@id/fragment_map"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="latitude"
+            app:argType="string" />
+        <argument
+            android:name="longitude"
+            app:argType="string" />
     </fragment>
 
 </navigation>

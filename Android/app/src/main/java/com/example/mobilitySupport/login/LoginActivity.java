@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
@@ -23,9 +22,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.mobilitySupport.join.JoinActivity;
 import com.example.mobilitySupport.MainActivity;
 import com.example.mobilitySupport.R;
+import com.example.mobilitySupport.join.JoinActivity;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONObject;
@@ -71,6 +70,7 @@ public class LoginActivity<item> extends AppCompatActivity {
                         String id = jsonResponse.getString("userID");
                         save(id);
                         nonMember(v);
+                        finish();
                     }
                     else{
                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
@@ -98,7 +98,6 @@ public class LoginActivity<item> extends AppCompatActivity {
     public void nonMember(View v) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
-        this.finish();
     }
 
     // 아이디 비번 찾기 버튼 클릭 시
@@ -128,7 +127,6 @@ public class LoginActivity<item> extends AppCompatActivity {
         SharedPreferences.Editor editor = appData.edit();
         editor.putString("ID", userID);
         editor.putBoolean("SAVE_LOGIN_DATA", true);
-        editor.apply();
-        editor.commit();
+        editor.apply(); editor.commit();
     }
 }
