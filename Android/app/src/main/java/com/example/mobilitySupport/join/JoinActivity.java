@@ -1,11 +1,12 @@
 package com.example.mobilitySupport.join;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +30,11 @@ public class JoinActivity extends AppCompatActivity {
     TextInputLayout pwCheck = null;
     TextInputLayout email = null;
 
+    Boolean idCheck = true;
+    Boolean passwdCheck = true;
+    Boolean checkCheck = true;
+    Boolean mailCheck = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,13 +54,55 @@ public class JoinActivity extends AppCompatActivity {
         pwCheck = (TextInputLayout) findViewById(R.id.TextInputLayer_PWCheck);
         pw.setPasswordVisibilityToggleEnabled(true);
         pwCheck.setPasswordVisibilityToggleEnabled(true);
+
+        final EditText idEditText = id.getEditText();
+        /*
+        idEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus)
+                    if(idEditText.getText().toString().isEmpty())
+                        id.setError("아이디를 입력해주십시오");
+                    else if()
+                    else { id.setError(null); }
+            }
+        });
+
+         *//*
+        idEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().getBytes().length < 8 || s.toString().getBytes().length > 12){
+                    id.setError("아이디는 8~12자리 입니다");
+                }
+                else
+                    id.setError(null);
+            }
+        });
+        */
+        String pwText = pw.getEditText().getText().toString();
+        String pwCheckText = pwCheck.getEditText().getText().toString();
+        String emailText = email.getEditText().getText().toString();
     }
 
     // 작성완료
     public void writeFin(View v) {
         textManage();
+        if(!idCheck || !passwdCheck || !checkCheck || !mailCheck ||
+                spinner.getSelectedItem().toString().equals("선택"))
+            return;
 
-        String userID = id.getEditText().getText().toString();  //final ?
+        String userID = id.getEditText().getText().toString();
         String userPassword = pw.getEditText().getText().toString();
         String userMail = email.getEditText().getText().toString();
         String userType = spinner.getSelectedItem().toString();
@@ -67,15 +115,17 @@ public class JoinActivity extends AppCompatActivity {
                     boolean success = jsonResponse.getBoolean("success");
                     if(success){
                         AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
-                        builder.setMessage("회원가입 완료")
-                                .setNegativeButton("확인", null)
+                        builder.setMessage("회원가입이 완료되었습니다!")
+                                .setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(JoinActivity.this, LoginActivity.class);
+                                        JoinActivity.this.startActivity(intent);
+                                        finish();
+                                    }
+                                })
                                 .create()
                                 .show();
-
-                        // 확인 클릭 시 이동할 수 있게
-                        Intent intent = new Intent(JoinActivity.this, LoginActivity.class);
-                        JoinActivity.this.startActivity(intent);
-                        finish();
                     }
                     else{
                         AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
@@ -111,23 +161,34 @@ public class JoinActivity extends AppCompatActivity {
         String pwCheckText = pwCheck.getEditText().getText().toString();
         String emailText = email.getEditText().getText().toString();
 
-        if(idText.isEmpty())
-            id.setError("아이디를 입력해주십시오");
-        else { id.setError(null); }
+        if(idText.isEmpty()) {
+            idCheck = false; id.setError("아이디를 입력해주십시오");
+        }
+        else {
+            idCheck = true; id.setError(null);
+        }
 
-        if(pwText.isEmpty())
-            pw.setError("비밀번호를 입력해주십시오");
-        else { pw.setError(null); }
+        if(pwText.isEmpty()) {
+            passwdCheck = false; pw.setError("비밀번호를 입력해주십시오");
+        }
+        else {
+            passwdCheck = true; pw.setError(null);
+        }
 
-        if(pwCheckText.isEmpty())
-            pwCheck.setError("비밀번호를 확인해주십시오");
-       else if(!(pwCheckText.equals(pwText)))
-            pwCheck.setError("비밀번호와 다릅니다");
-        else { pwCheck.setError(null);}
+        if(pwCheckText.isEmpty()) {
+            checkCheck = false; pwCheck.setError("비밀번호를 확인해주십시오");
+        }
+        else if(!(pwCheckText.equals(pwText))) {
+            checkCheck = false; pwCheck.setError("비밀번호와 다릅니다");
+        }
+        else {
+            checkCheck = true; pwCheck.setError(null);
+        }
 
-        if(emailText.isEmpty())
-            email.setError("이메일 주소를 입력해주십시오");
-        else { email.setError(null);}
+        if(emailText.isEmpty()) {
+            mailCheck = false; email.setError("이메일 주소를 입력해주십시오");
+        }
+        else { mailCheck = true; email.setError(null);}
 
     }
 }

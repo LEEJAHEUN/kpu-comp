@@ -13,8 +13,11 @@ package com.example.mobilitySupport.login;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +40,10 @@ public class LoginActivity<item> extends AppCompatActivity {
 
     String userID = null;
     String userPassword = null;
+    EditText idEditText = null;
+    EditText pwEditText = null;
+
+    Boolean idCheck = true; Boolean pwCheck = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +55,16 @@ public class LoginActivity<item> extends AppCompatActivity {
         // 비밀번호 표시 온 오프 설정
         inputLayoutPW = (TextInputLayout)findViewById(R.id.textInputLayoutPW);
         inputLayoutPW.setPasswordVisibilityToggleEnabled(true);
+
+        inputLayoutID = (TextInputLayout)findViewById(R.id.textInputLayoutID);
+        idEditText = inputLayoutID.getEditText();
+        pwEditText = inputLayoutPW.getEditText();
     }
 
     public void login(final View v) {
-        // 입력창 에러 관리
         manageInputError();
+        if(!idCheck || !pwCheck)
+            return;
 
         EditText idText = (EditText) findViewById(R.id.insert_ID);
         EditText pwText = (EditText) findViewById(R.id.insert_PW);
@@ -74,8 +86,8 @@ public class LoginActivity<item> extends AppCompatActivity {
                     }
                     else{
                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                        builder.setMessage("로그인 실패")
-                                .setNegativeButton("다시 시도", null)
+                        builder.setMessage("아이디 혹은 비밀번호가 일치하지 않습니다."+"\n"+"입력한 내용을 다시 확인해주세요.")
+                                .setNegativeButton("확인", null)
                                 .create()
                                 .show();
                     }
@@ -88,6 +100,7 @@ public class LoginActivity<item> extends AppCompatActivity {
         LoginRequest loginRequest = new LoginRequest(userID, userPassword, responseListener);
         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
         queue.add(loginRequest);
+
     }
 
     public void signUp(View v) {
@@ -105,22 +118,25 @@ public class LoginActivity<item> extends AppCompatActivity {
 
     }
 
-    // 입력창 에러 관리
-    public void manageInputError(){
-        inputLayoutID = (TextInputLayout)findViewById(R.id.textInputLayoutID);
-
-        EditText idEditText = inputLayoutID.getEditText();
-        EditText pwEditText = inputLayoutPW.getEditText();
-
-        if(idEditText.getText().toString().isEmpty()){
+    public void manageInputError() {
+        if (idEditText.getText().toString().isEmpty()) {
+            idCheck = false;
             inputLayoutID.setError("아이디를 입력해주십시오");
         }
-        else { inputLayoutID.setError(null); }
+        else {
+            idCheck = true;
+            inputLayoutID.setError(null);
+        }
 
-        if(pwEditText.getText().toString().isEmpty()){
+        if(pwEditText.getText().toString().isEmpty()) {
+            pwCheck = false;
             inputLayoutPW.setError("비밀번호를 입력해주십시오");
         }
-        else { inputLayoutPW.setError(null); }
+        else {
+            pwCheck = true;
+            inputLayoutPW.setError(null);
+        }
+
     }
 
     private void save(String userID){
@@ -129,4 +145,5 @@ public class LoginActivity<item> extends AppCompatActivity {
         editor.putBoolean("SAVE_LOGIN_DATA", true);
         editor.apply(); editor.commit();
     }
+
 }
