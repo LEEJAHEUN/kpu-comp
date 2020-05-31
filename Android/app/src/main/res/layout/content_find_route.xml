@@ -4,17 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/app_bar_find_route"
-    >
+    tools:showIn="@layout/app_bar_find_route">
 
-    <fragment
-        android:id="@+id/findRoute_host"
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        app:navGraph="@navigation/mobile_navigation">
-
-    </fragment>
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="220dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
