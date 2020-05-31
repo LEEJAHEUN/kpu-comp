@@ -58,23 +58,7 @@ public class ChoosePointFragment extends Fragment  {
         choosePoint.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View v) {
-<<<<<<< Updated upstream
                 Navigation.findNavController(v).navigate(R.id.action_fragment_point_to_fragment_writeRoad);
-=======
-                String postType = ChoosePointFragmentArgs.fromBundle(getArguments()).getType();
-                TMapPoint center = activity.getCenter();
-                Double latitude = center.getLatitude(); Double longitude = center.getLongitude();
-                if(postType.equals("road")) {    // 전 프래그먼트에서 길 선택했을 경우
-                    ChoosePointFragmentDirections.ActionFragmentPointToFragmentWriteRoad roadPoint =
-                            ChoosePointFragmentDirections.actionFragmentPointToFragmentWriteRoad(latitude.toString(), longitude.toString());
-                    Navigation.findNavController(v).navigate(roadPoint);
-                }
-                else {                            // 장소 선택했을 경우
-                    ChoosePointFragmentDirections.ActionFragmentPointToFragmentWritePlace placePoint =
-                            ChoosePointFragmentDirections.actionFragmentPointToFragmentWritePlace(latitude.toString(), longitude.toString());
-                    Navigation.findNavController(v).navigate(placePoint);
-                }
->>>>>>> Stashed changes
             }
         });
 

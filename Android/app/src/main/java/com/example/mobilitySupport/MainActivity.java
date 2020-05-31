@@ -47,16 +47,10 @@ import com.skt.Tmap.TMapView;
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback {
 
-<<<<<<< Updated upstream
-=======
-    private SharedPreferences appData;
-    String id = null;   // 자동 로그인 사용자 아이디
-
->>>>>>> Stashed changes
     private AppBarConfiguration mAppBarConfiguration;   // 네비게이션 드로어
 
     LinearLayout linearLayout;
-    TMapView tMapView = null;                           // 티맵 지도
+    TMapView tMapView = null;
     boolean isLocationPermission = false;               // 권한 설정 여부
     final int CHECK_LOCATION_PERMISSION = 1;
     private static GoogleApiClient googleApiClient;     // GPS 설정
@@ -90,40 +84,10 @@ public class MainActivity extends AppCompatActivity
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-<<<<<<< Updated upstream
         /* 메뉴 버튼 바꾸어주는 코드
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_view);
          */
-=======
-        View nav_header = navigationView.getHeaderView(0);
-        TextView loginInfo = nav_header.findViewById(R.id.mypage_or_login);
-        TextView info = nav_header.findViewById(R.id.information);
-
-        appData = getSharedPreferences("appData", MODE_PRIVATE);
-        id = appData.getString("ID", "");   // 로그인 정보 (로그인 하지 않은 경우 값: "")
-
-        if(!(id.equals(""))) {  // 자동 로그인
-            loginInfo.setText(id+"님 로그인 중");
-            info.setText("환영합니다!");
-            navigationView.getMenu().findItem(R.id.logout).setVisible(true);
-            navigationView.getMenu().findItem(R.id.mypage).setVisible(true);
-        }
-
-        loginInfo.setOnClickListener(new View.OnClickListener() {   // 헤더 클릭 시
-            @Override
-            public void onClick(View v) {   // 로그인 정보 헤더 클릭시
-                if(id.equals("")) {
-                    intent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                }
-                else {
-                    drawer.closeDrawers();
-                    navController.navigate(R.id.action_fragment_map_to_fragment_mypage);
-                }
-            }
-        });
->>>>>>> Stashed changes
 
         linearLayout = (LinearLayout)findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(this);
@@ -139,40 +103,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-<<<<<<< Updated upstream
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.findRoute:
                 Intent intent = new Intent(MainActivity.this, FindRouteActivity.class);
                 startActivity(intent);
-=======
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {  // 네비게이션 드로어 이벤트
-        switch (item.getItemId()) {
-            case R.id.findRoute:
-                drawer.closeDrawers();
-                navController.navigate(R.id.action_fragment_map_to_fragment_findRoute);
-                return true;
-            case R.id.logout:
-                SharedPreferences.Editor editor = appData.edit();
-                editor.clear(); editor.commit(); // 로그인 정보 삭제
-                intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);  // 로그인 화면으로 이동
-                finish();
-                return true;
-            case R.id.mypage:
-                if(id.equals(""))
-                    Toast.makeText(MainActivity.this,R.string.noLogin,Toast.LENGTH_LONG).show();
-                else {
-                    drawer.closeDrawers();
-                    navController.navigate(R.id.action_fragment_map_to_fragment_mypage); }
-                return true;
-            case R.id.writePost:
-                if(id.equals(""))
-                    Toast.makeText(MainActivity.this,R.string.noLogin,Toast.LENGTH_LONG).show();
-                else {
-                    drawer.closeDrawers();
-                    navController.navigate(R.id.action_fragment_map_to_fragment_writePost); }
->>>>>>> Stashed changes
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -187,17 +122,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-<<<<<<< Updated upstream
     public void onBackPressed(){
         DrawerLayout drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         // 뒤로가기 눌러서 네비게이션 드로어 닫기
         if(drawerLayout.isDrawerOpen(GravityCompat.START))
             drawerLayout.closeDrawers();
-=======
-    public void onBackPressed() {    // 뒤로가기 눌러서 네비게이션 드로어 닫기
-        if (drawer.isDrawerOpen(GravityCompat.START))
-            drawer.closeDrawers();
->>>>>>> Stashed changes
         else
             super.onBackPressed();
     }
@@ -329,54 +258,4 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, "위치 사용 설정을 켜주십시오", Toast.LENGTH_LONG).show();
         }
     }
-<<<<<<< Updated upstream
-=======
-
-    public void setPoint(final Button choosePoint, final TextView address) {    // 지도에서 선택 기능 사용 시 주소와 버튼 설정
-        TMapPoint center = tMapView.getCenterPoint();
-        getAddress(address, center);
-        tMapView.setOnEnableScrollWithZoomLevelListener(new TMapView.OnEnableScrollWithZoomLevelCallback() {
-            @Override
-            public void onEnableScrollWithZoomLevelEvent(float v, TMapPoint tMapPoint) {
-                if (choosePoint != null) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() { choosePoint.setEnabled(false); }
-                    });
-                }
-            }
-        });
-
-        tMapView.setOnDisableScrollWithZoomLevelListener(new TMapView.OnDisableScrollWithZoomLevelCallback() {
-            @Override
-            public void onDisableScrollWithZoomLevelEvent(float v, final TMapPoint tMapPoint) {
-                if (choosePoint != null) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            choosePoint.setEnabled(true);
-                            getAddress(address, tMapPoint);
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    public void getAddress(final TextView address, final TMapPoint center) {    // 지도 가운데 위치 주소 가져옴
-        TMapData tMapData = new TMapData();
-        tMapData.reverseGeocoding(center.getLatitude(), center.getLongitude(), "A10", new TMapData.reverseGeocodingListenerCallback() {
-            @Override
-            public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
-                String str = tMapAddressInfo.strCity_do+" "+tMapAddressInfo.strGu_gun+" "
-                        + tMapAddressInfo.strLegalDong+" "+tMapAddressInfo.strBunji+" "
-                        + tMapAddressInfo.strRi+"\n"+tMapAddressInfo.strRoadName+" "+
-                        tMapAddressInfo.strBuildingIndex;
-                str = str.replaceAll("null", "");
-                address.setText(str);
-            }
-        });
-    }
-    public TMapPoint getCenter(){return tMapView.getCenterPoint();}
->>>>>>> Stashed changes
 }

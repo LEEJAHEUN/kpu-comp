@@ -17,13 +17,7 @@ import com.example.mobilitySupport.MainActivity;
 import com.example.mobilitySupport.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-<<<<<<< Updated upstream
 public class MapFragment extends Fragment {
-=======
-public class MapFragment extends Fragment{
-    private SharedPreferences appData;
-    String id = null;   // 받아올 사용자 아이디
->>>>>>> Stashed changes
 
     LinearLayout linearLayout;
     MainActivity activity = null;
@@ -48,7 +42,6 @@ public class MapFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         SearchView searchView = (SearchView)activity.findViewById(R.id.search_view);
         searchView.setVisibility(View.VISIBLE);
-        searchView.setIconified(true);
 
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_map, container, false);
         linearLayout = view.findViewById(R.id.linearLayoutTmap);
@@ -64,17 +57,7 @@ public class MapFragment extends Fragment{
             }
         });
 
-<<<<<<< Updated upstream
 
-=======
-        FloatingActionButton fab_findRoute = view.findViewById(R.id.fab_findRoute);
-        fab_findRoute.setOnClickListener(new FloatingActionButton.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.action_fragment_map_to_fragment_findRoute);
-            }
-        });
->>>>>>> Stashed changes
         return view;
     }
 }
