@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F1BC20"
-    >
+    tools:context=".post.WritePostRoad">
 
     <EditText
         android:id="@+id/writePost"
@@ -32,13 +32,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.607"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wheelchairSlope"
+        app:layout_constraintTop_toBottomOf="@+id/roadBreakage"
         app:layout_constraintVertical_bias="0.082"
         app:srcCompat="@android:drawable/ic_menu_crop"
         tools:ignore="MissingConstraints" />
 
     <Spinner
-        android:id="@+id/Availability"
+        android:id="@+id/Availability2"
         android:layout_width="107dp"
         android:layout_height="53dp"
         android:layout_marginTop="24dp"
@@ -49,21 +49,21 @@
         app:layout_constraintTop_toBottomOf="@+id/writePost" />
 
     <TextView
-        android:id="@+id/spinner_type"
+        android:id="@+id/roadBreakage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:text="도로 파손 여부"
         android:textColor="#020202"
         android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/wheelchairSlope"
+        app:layout_constraintEnd_toStartOf="@+id/roadBreakage2"
         app:layout_constraintHorizontal_bias="0.743"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stairs2"
         tools:ignore="MissingConstraints" />
 
     <Spinner
-        android:id="@+id/spinner_type"
+        android:id="@+id/roadBreakage2"
         android:layout_width="107dp"
         android:layout_height="53dp"
         android:layout_marginEnd="56dp"
@@ -71,11 +71,11 @@
         android:textColor="#101010"
         app:layout_constraintBottom_toTopOf="@+id/imagechoose"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wheelchairSlope"
+        app:layout_constraintTop_toBottomOf="@+id/slope2"
         app:layout_constraintVertical_bias="0.44" />
 
     <Spinner
-        android:id="@+id/spinner_type"
+        android:id="@+id/slope2"
         android:layout_width="107dp"
         android:layout_height="53dp"
         android:layout_marginTop="24dp"
@@ -83,7 +83,7 @@
         android:spinnerMode="dropdown"
         android:textColor="#101010"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Availability" />
+        app:layout_constraintTop_toBottomOf="@+id/Availability2" />
 
     <Button
         android:id="@+id/reset"
@@ -109,7 +109,7 @@
         android:text="도로 경사 각도"
         android:textColor="#0C0C0C"
         android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/wheelchairSlope"
+        app:layout_constraintEnd_toStartOf="@+id/slope2"
         app:layout_constraintHorizontal_bias="0.743"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Availability"
@@ -139,7 +139,7 @@
         android:text="이용 가능한 정도"
         android:textColor="#121111"
         android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/Availability"
+        app:layout_constraintEnd_toStartOf="@+id/Availability2"
         app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/writePost" />

@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -61,10 +62,8 @@
         android:id="@+id/linearLayoutTmap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical">
-    </LinearLayout>
+        android:orientation="vertical"></LinearLayout>
 
-    <include layout="@layout/nav_host_fragment" />
+    <include layout="@layout/nav_host_fragment"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -14,25 +14,39 @@
             app:destination="@id/fragment_writePost" />
         <action
             android:id="@+id/action_fragment_map_to_fragment_mypage"
+<<<<<<< Updated upstream
+            app:destination="@id/fragment_mypage" />
+=======
             app:destination="@id/fragment_mypage"
             app:launchSingleTop="false" />
+        <action
+            android:id="@+id/action_fragment_map_to_fragment_findRoute"
+            app:destination="@id/fragment_findRoute" />
+>>>>>>> Stashed changes
 
     </fragment>
 
     <fragment
         android:id="@+id/fragment_writePost"
-        android:name="com.example.mobilitySupport.post.ChoosePostTypeFragment"
+        android:name="com.example.mobilitySupport.post.WritePostFragment"
         tools:layout="@layout/fragment_choose_posttype" >
         <action
             android:id="@+id/action_fragment_writePost_to_fragment_point"
             app:destination="@id/fragment_point" />
     </fragment>
-<!--
+
     <fragment
         android:id="@+id/fragment_findRoute"
-        android:name="com.example.mobilitySupport.post.FindRouteFragment"
-        tools:layout="@layout/fragment_findroute" />
--->
+        android:name="com.example.mobilitySupport.findRoute.FindRouteFragment"
+        tools:layout="@layout/fragment_findroute" >
+        <action
+            android:id="@+id/action_fragment_findRoute_to_fragment_map"
+            app:destination="@id/fragment_map" />
+        <action
+            android:id="@+id/action_fragment_findRoute_to_frgment_search"
+            app:destination="@id/frgment_search" />
+    </fragment>
+
     <fragment
         android:id="@+id/fragment_mypage"
         android:name="com.example.mobilitySupport.member.MypageFragment"
@@ -47,43 +61,37 @@
             app:destination="@id/fragment_writeRoad" />
         <action
             android:id="@+id/action_fragment_point_to_fragment_writePlace"
+<<<<<<< Updated upstream
+            app:destination="@id/fragment_writePlace" />
+=======
             app:destination="@id/fragment_writePlace"
             />
         <argument
-            android:name="postType"
+            android:name="type"
             app:argType="string" />
+        <action
+            android:id="@+id/action_fragment_point_to_fragment_findRoute"
+            app:destination="@id/fragment_findRoute" />
+>>>>>>> Stashed changes
     </fragment>
 
     <fragment
         android:id="@+id/fragment_writeRoad"
         android:name="com.example.mobilitySupport.post.RoadFragment"
-        tools:layout="@layout/writepost_road">
-        <action
-            android:id="@+id/action_fragment_writeRoad_to_fragment_map"
-            app:destination="@id/fragment_map"
-            app:popUpTo="@id/fragment_map"
-            app:popUpToInclusive="true" />
-        <argument android:name="latitude"
-            app:argType="string" />
-        <argument android:name="longitude"
-            app:argType="string" />
-    </fragment>
+        tools:layout="@layout/writepost_road"/>
 
     <fragment
         android:id="@+id/fragment_writePlace"
         android:name="com.example.mobilitySupport.post.PlaceFragment"
-        tools:layout="@layout/writepost_place">
+        tools:layout="@layout/writepost_place"/>
+
+    <fragment
+        android:id="@+id/frgment_search"
+        android:name="com.example.mobilitySupport.findRoute.SearchFragment"
+        tools:layout="@layout/fragment_search">
         <action
-            android:id="@+id/action_fragment_writePlace_to_fragment_map"
-            app:destination="@id/fragment_map"
-            app:popUpTo="@id/fragment_map"
-            app:popUpToInclusive="true" />
-        <argument
-            android:name="latitude"
-            app:argType="string" />
-        <argument
-            android:name="longitude"
-            app:argType="string" />
+            android:id="@+id/action_frgment_search_to_fragment_point"
+            app:destination="@id/fragment_point" />
     </fragment>
 
 </navigation>

@@ -1,5 +1,7 @@
 package com.example.mobilitySupport.post;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,19 +12,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.mobilitySupport.R;
 
-public class WritePostPlaceActivity extends AppCompatActivity { // 제보글 작성 페이지(장소)
+public class WritePostRoad extends AppCompatActivity {
 
     private final int GET_GALLERY_IMAGE = 200;
     private ImageView imageview;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) { //제보글 작성 페이지(길)
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.writepost_road);
+        setContentView(R.layout.writepost_place);
 
         final String[] data = getResources().getStringArray(R.array.spinnerArray3);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,data);
@@ -31,18 +31,13 @@ public class WritePostPlaceActivity extends AppCompatActivity { // 제보글 작
 
         final String[] data2 = getResources().getStringArray(R.array.spinnerArray2);
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,data2);
-        Spinner spinner2 = (Spinner) findViewById(R.id.stairs2);
+        Spinner spinner2 = (Spinner)findViewById(R.id.slope2);
         spinner2.setAdapter(adapter2);
 
         final String[] data3 = getResources().getStringArray(R.array.spinnerArray2);
         ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,data3);
-        Spinner spinner3 = (Spinner)findViewById(R.id.elevator2);
+        Spinner spinner3 = (Spinner)findViewById(R.id.roadBreakage2);
         spinner3.setAdapter(adapter3);
-
-        final String[] data4 = getResources().getStringArray(R.array.spinnerArray2);
-        ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,data4);
-        Spinner spinner4 = (Spinner)findViewById(R.id.wheelchairSlope2);
-        spinner4.setAdapter(adapter4);
 
         imageview = (ImageView)findViewById(R.id.imagechoose);
         imageview.setOnClickListener(new View.OnClickListener() {
@@ -94,3 +89,4 @@ public class WritePostPlaceActivity extends AppCompatActivity { // 제보글 작
 
     }
 }
+
