@@ -23,10 +23,10 @@ public class WritePostPlaceActivity extends AppCompatActivity { // 제보글 작
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.writepost_road);
-
+/*
         final String[] data = getResources().getStringArray(R.array.spinnerArray3);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,data);
-        Spinner spinner = (Spinner)findViewById(R.id.Availability2);
+        Spinner spinner = (Spinner)findViewById(R.id.Availability);
         spinner.setAdapter(adapter);
 
         final String[] data2 = getResources().getStringArray(R.array.spinnerArray2);
@@ -44,6 +44,8 @@ public class WritePostPlaceActivity extends AppCompatActivity { // 제보글 작
         Spinner spinner4 = (Spinner)findViewById(R.id.wheelchairSlope2);
         spinner4.setAdapter(adapter4);
 
+
+ */
         imageview = (ImageView)findViewById(R.id.imagechoose);
         imageview.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

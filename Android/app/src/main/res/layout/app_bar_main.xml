@@ -62,8 +62,10 @@
         android:id="@+id/linearLayoutTmap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"></LinearLayout>
+        android:layout_gravity="center"
+        android:orientation="vertical">
+    </LinearLayout>
 
-    <include layout="@layout/nav_host_fragment"/>
+    <include layout="@layout/nav_host_fragment" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

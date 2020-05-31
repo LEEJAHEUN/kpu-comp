@@ -7,18 +7,61 @@
     android:background="#F1BC20"
    >
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="350dp"
+        android:layout_height="2dp"
+        android:background="@color/wallet_bright_foreground_holo_light"
+        android:src="?attr/editTextBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.557"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.318" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="필수 항목 *"
+        android:textColor="#121111"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.875"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.039" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="* 교통약자 유형 선택"
+        android:textColor="#020202"
+        android:textSize="24sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.164"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.227"
+        tools:ignore="MissingConstraints" />
+
     <Spinner
-        android:id="@+id/wheelchairSlope3"
+        android:id="@+id/angle"
         android:layout_width="107dp"
         android:layout_height="61dp"
         android:spinnerMode="dropdown"
         android:textColor="#101010"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.855"
+        app:layout_constraintHorizontal_bias="0.911"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.334" />
+        app:layout_constraintVertical_bias="0.359" />
 
     <Spinner
         android:id="@+id/availability"
@@ -28,10 +71,10 @@
         android:textColor="#101010"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.845"
+        app:layout_constraintHorizontal_bias="0.901"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.115" />
+        app:layout_constraintVertical_bias="0.094" />
 
     <ImageView
         android:id="@+id/imagechoose"
@@ -41,10 +84,10 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.607"
+        app:layout_constraintHorizontal_bias="0.598"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.636"
+        app:layout_constraintVertical_bias="0.78"
         app:srcCompat="@drawable/baseline_add_photo_alternate_black_48" />
 
     <Button
@@ -57,13 +100,12 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.303"
+        app:layout_constraintHorizontal_bias="0.325"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.878" />
+        app:layout_constraintVertical_bias="0.935" />
 
     <TextView
-        android:id="@+id/wheelchairSlope"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="도로 파손 여부"
@@ -74,23 +116,9 @@
         app:layout_constraintHorizontal_bias="0.294"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.457" />
-
-    <Spinner
-        android:id="@+id/elevator2"
-        android:layout_width="107dp"
-        android:layout_height="56dp"
-        android:spinnerMode="dropdown"
-        android:textColor="#101010"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.855"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.46" />
+        app:layout_constraintVertical_bias="0.566" />
 
     <TextView
-        android:id="@+id/stairs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="계단 유무"
@@ -98,37 +126,36 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.309"
+        app:layout_constraintHorizontal_bias="0.331"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.236" />
+        app:layout_constraintVertical_bias="0.464" />
 
     <Spinner
-        android:id="@+id/wheelchairSlope2"
+        android:id="@+id/spinner_type"
         android:layout_width="107dp"
         android:layout_height="61dp"
         android:spinnerMode="dropdown"
         android:textColor="#101010"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.845"
+        app:layout_constraintHorizontal_bias="0.901"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.223" />
+        app:layout_constraintVertical_bias="0.219" />
 
     <TextView
-        android:id="@+id/Availability"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="이용 가능한 정도"
+        android:text="* 이용 가능한 정도"
         android:textColor="#0C0C0C"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.264"
+        app:layout_constraintHorizontal_bias="0.209"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.127" />
+        app:layout_constraintVertical_bias="0.11" />
 
     <Button
         android:id="@+id/writeFin"
@@ -140,13 +167,12 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.758"
+        app:layout_constraintHorizontal_bias="0.777"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.878" />
+        app:layout_constraintVertical_bias="0.935" />
 
     <TextView
-        android:id="@+id/elevator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="도로 경사 각도"
@@ -157,7 +183,31 @@
         app:layout_constraintHorizontal_bias="0.294"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.349"
+        app:layout_constraintVertical_bias="0.369"
         tools:ignore="MissingConstraints" />
+
+    <CheckBox
+        android:id="@+id/checkBox_stairs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="없음"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.832"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.463" />
+
+    <CheckBox
+        android:id="@+id/checkBox_breakage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="없음"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.832"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.566" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

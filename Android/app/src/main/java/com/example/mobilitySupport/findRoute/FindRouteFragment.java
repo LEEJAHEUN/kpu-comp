@@ -68,7 +68,7 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener{
                 route.setSelected(false); avoidRoute.setSelected(true);
                 break;
             case R.id.start : case R.id.arrive:
-                Navigation.findNavController(v).navigate(R.id.action_fragment_findRoute_to_frgment_search);
+                Navigation.findNavController(v).navigate(R.id.action_fragment_findRoute_to_fragment_search);
             default:
                 break;
         }

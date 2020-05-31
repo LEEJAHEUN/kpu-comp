@@ -34,7 +34,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         SearchView searchView = activity.findViewById(R.id.search_view);
         searchView.setVisibility(View.GONE);
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -80,7 +79,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
             case R.id.mylocation:
                 break;
             case R.id.choosemappoint:
-                Navigation.findNavController(v).navigate(R.id.action_frgment_search_to_fragment_point);
+                Navigation.findNavController(v).navigate(R.id.action_fragment_search_to_fragment_point);
         }
     }
 

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -6,7 +6,6 @@
         <item name="colorPrimary">#FF9800</item>
         <item name="colorPrimaryDark">#E65100</item>
         <item name="colorAccent">#FF4081</item>
-
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
@@ -18,4 +17,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="button" parent="Widget.AppCompat.Button">
+        <item name="colorButtonNormal">@drawable/button_color_selector</item>
+    </style>
 </resources>
