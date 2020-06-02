@@ -47,6 +47,7 @@ public class MapFragment extends Fragment {
         SearchView searchView = (SearchView)activity.findViewById(R.id.search_view);
         searchView.setVisibility(View.VISIBLE);
         searchView.setIconified(true);
+        searchView.setQueryHint("검색...");
 
         appData = getActivity().getSharedPreferences("appData", Context.MODE_PRIVATE);
         id = appData.getString("ID", "");   // 로그인 정보

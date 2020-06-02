@@ -15,12 +15,13 @@ import androidx.navigation.Navigation;
 
 import com.example.mobilitySupport.MainActivity;
 import com.example.mobilitySupport.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class SearchFragment extends Fragment implements View.OnClickListener{
     MainActivity activity = null;
     SearchView searchView = null;
     ImageView closeButton = null;
+
+    String type;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -40,6 +41,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_search, container, false);
         activity.findViewById(R.id.appBarLayout).setOutlineProvider(null);
 
+        type = SearchFragmentArgs.fromBundle(getArguments()).getType(); // 검색 타입(출발지/도착지)
+
         view.findViewById(R.id.choosemappoint).setOnClickListener(this);
         view.findViewById(R.id.mylocation).setOnClickListener(this);
 
@@ -47,6 +50,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         searchView.setVisibility(View.VISIBLE);
         searchView.setIconified(false);
         searchView.setOnClickListener(this);
+
+        if(type.equals("start"))
+            searchView.setQueryHint("출발지 검색");
+        else
+            searchView.setQueryHint("도착지 검색");
+
         closeButton = (ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
         closeButton.setVisibility(View.INVISIBLE);
 
@@ -71,17 +80,16 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            /*
             case R.id.search_view:
                 searchView.setIconified(false);
                 searchView.onActionViewExpanded();
-             */
             case R.id.mylocation:
                 break;
             case R.id.choosemappoint:
-                Navigation.findNavController(v).navigate(R.id.action_fragment_search_to_fragment_point);
+                SearchFragmentDirections.ActionFragmentSearchToFragmentPoint action
+                        = SearchFragmentDirections.actionFragmentSearchToFragmentPoint("findRoute");
+                Navigation.findNavController(v).navigate(action);
         }
     }
-
-
 }
+

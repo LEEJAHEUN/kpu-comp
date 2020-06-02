@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +15,8 @@ import androidx.navigation.Navigation;
 
 import com.example.mobilitySupport.MainActivity;
 import com.example.mobilitySupport.R;
+import com.skt.Tmap.TMapAddressInfo;
+import com.skt.Tmap.TMapData;
 
 public class FindRouteFragment extends Fragment implements View.OnClickListener{
     MainActivity activity = null;
@@ -50,6 +53,7 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener{
 
         view.findViewById(R.id.start).setOnClickListener(this);
         view.findViewById(R.id.arrive).setOnClickListener(this);
+
         return view;
     }
 
@@ -67,8 +71,16 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener{
                 routeType = false;
                 route.setSelected(false); avoidRoute.setSelected(true);
                 break;
-            case R.id.start : case R.id.arrive:
-                Navigation.findNavController(v).navigate(R.id.action_fragment_findRoute_to_fragment_search);
+            case R.id.start :
+                FindRouteFragmentDirections.ActionFragmentFindRouteToFragmentSearch actionFragmentFindRouteToFragmentSearchStart
+                        = FindRouteFragmentDirections.actionFragmentFindRouteToFragmentSearch("start");
+                Navigation.findNavController(v).navigate(actionFragmentFindRouteToFragmentSearchStart);
+                break;
+            case R.id.arrive:
+                FindRouteFragmentDirections.ActionFragmentFindRouteToFragmentSearch actionFragmentFindRouteToFragmentSearchArrive
+                        = FindRouteFragmentDirections.actionFragmentFindRouteToFragmentSearch("arrive");
+                Navigation.findNavController(v).navigate(actionFragmentFindRouteToFragmentSearchArrive);
+                break;
             default:
                 break;
         }

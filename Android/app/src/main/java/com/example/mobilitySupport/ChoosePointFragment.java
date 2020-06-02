@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +14,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.example.mobilitySupport.post.ChoosePostTypeFragmentDirections;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.skt.Tmap.TMapPoint;
 
@@ -63,10 +61,13 @@ public class ChoosePointFragment extends Fragment {
                             ChoosePointFragmentDirections.actionFragmentPointToFragmentWriteRoad(latitude.toString(), longitude.toString());
                     Navigation.findNavController(v).navigate(roadPoint);
                 }
-                else {                            // 장소 선택했을 경우
+                else if(postType.equals("place")){                            // 장소 선택했을 경우
                     ChoosePointFragmentDirections.ActionFragmentPointToFragmentWritePlace placePoint =
                             ChoosePointFragmentDirections.actionFragmentPointToFragmentWritePlace(latitude.toString(), longitude.toString());
                     Navigation.findNavController(v).navigate(placePoint);
+                }
+                else{   // 길찾기 지도 선택
+                    Navigation.findNavController(v).navigate(R.id.action_fragment_point_to_fragment_findRoute);
                 }
             }
         });
