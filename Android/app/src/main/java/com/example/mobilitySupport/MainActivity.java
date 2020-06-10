@@ -429,13 +429,13 @@ public class MainActivity extends AppCompatActivity
                         tMapView.addTMapPath(path);
 
                         //결과에 맞춰 중심 좌표, 확대 정도 변경
-                        ArrayList point = new ArrayList();
+                        ArrayList<TMapPoint> point = new ArrayList<TMapPoint>();
                         point.add(finalStart);
                         point.add(finalArrive);
                         TMapInfo info = tMapView.getDisplayTMapInfo(point);
                         tMapView.setCenterPoint(info.getTMapPoint().getLongitude(),info.getTMapPoint().getLatitude());
                         //+0.0020
-                        tMapView.setZoomLevel(info.getTMapZoomLevel());
+                        tMapView.setZoomLevel(info.getTMapZoomLevel()-1);
                     }
                 });
             }
