@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,8 +16,6 @@ import androidx.navigation.Navigation;
 
 import com.example.mobilitySupport.MainActivity;
 import com.example.mobilitySupport.R;
-import com.skt.Tmap.TMapAddressInfo;
-import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapPoint;
 
 public class FindRouteFragment extends Fragment implements View.OnClickListener{
@@ -27,6 +24,7 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener{
 
     ImageButton route;
     ImageButton avoidRoute;
+
 
     private SharedPreferences appData;
     String startLat, startLong, endLat, endLong;
@@ -48,6 +46,7 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_findroute, container, false);
+
         //메인액티비티의 액션바 숨김
         activity.getSupportActionBar().hide();
 
@@ -134,6 +133,7 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener{
         }
     }
 
+
     //문자열을 실수로 형변환
     public TMapPoint convDouble(String sLat, String sLong){
         //double형으로 형변환
@@ -150,6 +150,5 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener{
         endLat = appData.getString("EndLat", "");
         endLong = appData.getString("EndLong", "");
     }
-
 
 }
