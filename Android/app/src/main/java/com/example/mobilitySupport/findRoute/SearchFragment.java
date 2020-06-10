@@ -1,6 +1,7 @@
 package com.example.mobilitySupport.findRoute;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.navigation.Navigation;
 
 import com.example.mobilitySupport.MainActivity;
 import com.example.mobilitySupport.R;
+import com.skt.Tmap.TMapPoint;
 
 public class SearchFragment extends Fragment implements View.OnClickListener{
     MainActivity activity = null;
@@ -22,6 +24,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
     ImageView closeButton = null;
 
     String type;
+
+    private SharedPreferences appData;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -84,6 +88,25 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
                 searchView.setIconified(false);
                 searchView.onActionViewExpanded();
             case R.id.mylocation:
+                TMapPoint point = activity.getLocation();   // 현재 위치 받아오기
+                Double latitude = point.getLatitude(); Double longtitude = point.getLongitude();
+                appData = getActivity().getSharedPreferences("appData", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = appData.edit();
+                if(type.equals("start")) {
+                    editor.putString("StartLat", latitude.toString());
+                    editor.putString("StartLong", longtitude.toString());
+                }
+                else {
+                    editor.putString("EndLat", latitude.toString());
+                    editor.putString("EndLong", longtitude.toString());
+                }
+                editor.apply(); editor.commit();
+                Navigation.findNavController(v).navigate(R.id.action_fragment_search_to_fragment_findRoute);
+                break;
+            case R.id.choosemappoint:
+                SearchFragmentDirections.ActionFragmentSearchToFragmentPoint action
+                        = SearchFragmentDirections.actionFragmentSearchToFragmentPoint(type);
+
                 break;
             case R.id.choosemappoint:
                 SearchFragmentDirections.ActionFragmentSearchToFragmentPoint action

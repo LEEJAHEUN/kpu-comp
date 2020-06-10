@@ -1,6 +1,7 @@
 package com.example.mobilitySupport;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ public class ChoosePointFragment extends Fragment {
 
     MainActivity activity = null;
     Button choosePoint = null;
+    private SharedPreferences appData;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -55,6 +57,10 @@ public class ChoosePointFragment extends Fragment {
             public void onClick(View v) {
                 String postType = ChoosePointFragmentArgs.fromBundle(getArguments()).getType();
                 TMapPoint center = activity.getCenter();
+
+                appData = getActivity().getSharedPreferences("appData", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = appData.edit();
+
                 Double latitude = center.getLatitude(); Double longitude = center.getLongitude();
                 if(postType.equals("road")) {    // 전 프래그먼트에서 길 선택했을 경우
                     ChoosePointFragmentDirections.ActionFragmentPointToFragmentWriteRoad roadPoint =
@@ -66,10 +72,18 @@ public class ChoosePointFragment extends Fragment {
                             ChoosePointFragmentDirections.actionFragmentPointToFragmentWritePlace(latitude.toString(), longitude.toString());
                     Navigation.findNavController(v).navigate(placePoint);
                 }
-                else{   // 길찾기 지도 선택
+                else if(postType.equals("start")){    // 길찾기 지도 선택
+                    editor.putString("StartLat", latitude.toString());
+                    editor.putString("StartLong", longitude.toString());
+                    editor.apply(); editor.commit();
                     Navigation.findNavController(v).navigate(R.id.action_fragment_point_to_fragment_findRoute);
                 }
-            }
+                else{
+                    editor.putString("EndLat", latitude.toString());
+                    editor.putString("EndLong", longitude.toString());
+                    editor.apply(); editor.commit();
+                    Navigation.findNavController(v).navigate(R.id.action_fragment_point_to_fragment_findRoute);
+                }
         });
 
         return view;
