@@ -25,7 +25,6 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener{
     ImageButton route;
     ImageButton avoidRoute;
 
-
     private SharedPreferences appData;
     String startLat, startLong, endLat, endLong;
 
@@ -46,7 +45,6 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_findroute, container, false);
-
         //메인액티비티의 액션바 숨김
         activity.getSupportActionBar().hide();
 
@@ -133,7 +131,6 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-
     //문자열을 실수로 형변환
     public TMapPoint convDouble(String sLat, String sLong){
         //double형으로 형변환
@@ -150,5 +147,6 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener{
         endLat = appData.getString("EndLat", "");
         endLong = appData.getString("EndLong", "");
     }
+
 
 }

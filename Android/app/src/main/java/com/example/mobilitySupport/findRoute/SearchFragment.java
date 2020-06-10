@@ -106,11 +106,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
             case R.id.choosemappoint:
                 SearchFragmentDirections.ActionFragmentSearchToFragmentPoint action
                         = SearchFragmentDirections.actionFragmentSearchToFragmentPoint(type);
-
-                break;
-            case R.id.choosemappoint:
-                SearchFragmentDirections.ActionFragmentSearchToFragmentPoint action
-                        = SearchFragmentDirections.actionFragmentSearchToFragmentPoint("findRoute");
                 Navigation.findNavController(v).navigate(action);
         }
     }
