@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -22,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -44,8 +48,19 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.material.navigation.NavigationView;
 import com.skt.Tmap.TMapAddressInfo;
 import com.skt.Tmap.TMapData;
+import com.skt.Tmap.TMapInfo;
+import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapPoint;
+import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapView;
+
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback {
@@ -63,6 +78,9 @@ public class MainActivity extends AppCompatActivity
     protected LocationRequest request;
     int REQUEST_CHECK_SETTINGS = 100;                   // GPS 설정 코드
     LocationManager locationManager = null;
+
+    double latitude = 0;
+    double longitude = 0;
 
     int updateTime = 1000;      // 현재 위치 갱신 시간
     int updateDistance = 1;     // 현재 위치 갱신 이동 거리
@@ -116,14 +134,19 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        //메인 화면(app_bar_main)의 지도 부분 레이아웃을 가져와 대입
         linearLayout = (LinearLayout) findViewById(R.id.linearLayoutTmap);
+
+        //지도 생성
         tMapView = new TMapView(this);
         tMapView.setSKTMapApiKey(getString(R.string.apiKey));
         tMapView.setLanguage(TMapView.LANGUAGE_KOREAN);
         tMapView.setIconVisibility(true); //현재위치로 표시될 아이콘을 표시할지 여부
+        //지도 띄울 때 확대 정도
         tMapView.setZoomLevel(17);
         tMapView.setMapType(TMapView.MAPTYPE_STANDARD);
 
+        //화면에 지도 표시
         linearLayout.addView(tMapView);
         setGPS();
     }
@@ -132,14 +155,14 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.findRoute:
-                intent = new Intent(MainActivity.this, FindRouteActivity.class);
-                startActivity(intent);
-                finish();
+                drawer.closeDrawers();
+                navController.navigate(R.id.action_fragment_map_to_fragment_findRoute);
                 return true;
 
             case R.id.logout:
                 SharedPreferences.Editor editor = appData.edit();
-                editor.clear(); editor.commit(); // 로그인 정보 삭제
+                editor.remove("ID"); editor.remove("SAVE_LOGIN_DATA"); // 로그인 정보 삭제
+                editor.commit();
                 intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);  // 로그인 화면으로 이동
                 finish();
@@ -191,8 +214,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onLocationChanged(Location location) {
             if (location != null) {
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
                 tMapView.setLocationPoint(longitude, latitude);
                 tMapView.setCenterPoint(longitude, latitude);
             } else
@@ -338,6 +361,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    //지도에서 위치 선택시 하단에 해당좌표의 주소 표시
     public void setAddress(final TextView address, final TMapPoint center) {
         TMapData tMapData = new TMapData();
         tMapData.reverseGeocoding(center.getLatitude(), center.getLongitude(), "A10", new TMapData.reverseGeocodingListenerCallback() {
@@ -353,5 +377,80 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    //길찾기 시 선택한 위치를 주소로 변환, 출발지/목적지에 표시
+    public void setRouteAddress(final TextView address, final TMapPoint point) {
+        TMapData tMapData = new TMapData();
+        tMapData.reverseGeocoding(point.getLatitude(), point.getLongitude(), "A10", new TMapData.reverseGeocodingListenerCallback() {
+            @Override
+            public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
+                String str = tMapAddressInfo.strCity_do+" "+tMapAddressInfo.strGu_gun+" "
+                        + tMapAddressInfo.strLegalDong+" " + tMapAddressInfo.strRi+" "
+                        +tMapAddressInfo.strRoadName+" "+ tMapAddressInfo.strBuildingIndex;
+                str = str.replaceAll("null", "");
+                address.setText(str);
+            }
+        });
+    }
+
+    //출발지, 목적지를 받아 (최단)경로 표시
+    public void getShortestPath(TMapPoint start, TMapPoint arrive) {
+        //출발지의 위도, 경도(start.latitude, start.longitude)
+        start = new TMapPoint(start.getLatitude(), start.getLongitude());
+        //목적지의 위도, 경도
+        arrive = new TMapPoint(arrive.getLatitude(), arrive.getLongitude());
+
+        //출발지, 목적지를 마커로 표시
+        TMapMarkerItem startMark = new TMapMarkerItem();
+        TMapMarkerItem endMark = new TMapMarkerItem();
+        startMark.setTMapPoint(start);
+        endMark.setTMapPoint(arrive);
+
+        //출발지, 도착지에 마커 추가
+        //tMapView.addMarkerItem("start",startMark);
+        //tMapView.addMarkerItem("arrive",endMark);
+
+        //보행자 (최단)경로를 요청함(경로 종류, 출발지, 도착지, 검색결과를 받는 인터페이스 함수)
+        TMapData data = new TMapData();
+        final TMapPoint finalStart = start;
+        final TMapPoint finalArrive = arrive;
+        data.findPathDataWithType(TMapData.TMapPathType.PEDESTRIAN_PATH, start, arrive, new TMapData.FindPathDataListenerCallback() {
+
+            //보행자 (최단)경로 생성
+            @Override
+            public void onFindPathData(final TMapPolyLine path) {
+                //UiThread 사용
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //보여줄 경로(선)의 두께, 색상 설정
+                        path.setLineWidth(5);
+                        path.setLineColor(Color.RED);
+                        //경로를 지도에 표시함
+                        tMapView.addTMapPath(path);
+
+                        //결과에 맞춰 중심 좌표, 확대 정도 변경
+                        ArrayList point = new ArrayList();
+                        point.add(finalStart);
+                        point.add(finalArrive);
+                        TMapInfo info = tMapView.getDisplayTMapInfo(point);
+                        tMapView.setCenterPoint(info.getTMapPoint().getLongitude(),info.getTMapPoint().getLatitude());
+                        //+0.0020
+                        tMapView.setZoomLevel(info.getTMapZoomLevel());
+                    }
+                });
+            }
+        });
+    }
+
+    //지도에 표시한 경로 삭제
+    public void removePath(){
+        tMapView.removeTMapPath();
+    }
+
     public TMapPoint getCenter(){return tMapView.getCenterPoint();}
+
+
+    public TMapPoint getLocation(){
+        return new TMapPoint(latitude, longitude);
+    }
 }

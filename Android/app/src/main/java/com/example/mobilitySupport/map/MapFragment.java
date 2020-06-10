@@ -46,6 +46,8 @@ public class MapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         SearchView searchView = (SearchView)activity.findViewById(R.id.search_view);
         searchView.setVisibility(View.VISIBLE);
+        searchView.setIconified(true);
+        searchView.setQueryHint("검색...");
 
         appData = getActivity().getSharedPreferences("appData", Context.MODE_PRIVATE);
         id = appData.getString("ID", "");   // 로그인 정보
@@ -64,6 +66,14 @@ public class MapFragment extends Fragment {
                     Toast.makeText(activity.getApplicationContext(), R.string.noLogin, Toast.LENGTH_LONG).show();
                 else
                     Navigation.findNavController(v).navigate(R.id.action_fragment_map_to_fragment_writePost);
+            }
+        });
+
+        FloatingActionButton fab_findRoute = view.findViewById(R.id.fab_findRoute);
+        fab_findRoute.setOnClickListener(new FloatingActionButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_fragment_map_to_fragment_findRoute);
             }
         });
 

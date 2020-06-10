@@ -27,7 +27,8 @@
 
         <item
             android:id="@+id/findRoute"
-            android:title="길찾기" />
+            android:title="길찾기"
+            android:onClick="onOptionsItemSelected"/>
 
          <item
             android:id="@+id/appInformation"
