@@ -372,7 +372,13 @@ public class MainActivity extends AppCompatActivity
                         + tMapAddressInfo.strRi+"\n"+tMapAddressInfo.strRoadName+" "+
                         tMapAddressInfo.strBuildingIndex;
                 str = str.replaceAll("null", "");
-                address.setText(str);
+                final String finalStr = str;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        address.setText(finalStr);
+                    }
+                });
             }
         });
     }
@@ -387,7 +393,13 @@ public class MainActivity extends AppCompatActivity
                         + tMapAddressInfo.strLegalDong+" " + tMapAddressInfo.strRi+" "
                         +tMapAddressInfo.strRoadName+" "+ tMapAddressInfo.strBuildingIndex;
                 str = str.replaceAll("null", "");
-                address.setText(str);
+                final String finalStr = str;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        address.setText(finalStr);
+                    }
+                });
             }
         });
     }
