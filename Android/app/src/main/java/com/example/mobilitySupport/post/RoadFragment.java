@@ -17,13 +17,14 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.example.mobilitySupport.R;
+import com.example.mobilitySupport.ServerRequest;
 
-public class RoadFragment extends Fragment {
+public class RoadFragment extends Fragment implements View.OnClickListener, CheckBox.OnCheckedChangeListener{
     private SharedPreferences appData;
     String id = null;   // 받아올 사용자 아이디
 
@@ -42,8 +43,6 @@ public class RoadFragment extends Fragment {
     CheckBox breakage = null;
 
     private final int GET_GALLERY_IMAGE = 200;
-    Boolean checkStairs = false;    // true 일 경우 서버에 값 전달
-    Boolean checkBreakage = false;  //
 
     @Nullable
     @Override
@@ -72,73 +71,73 @@ public class RoadFragment extends Fragment {
         stairs = view.findViewById(R.id.checkBox_stairs);
         breakage = view.findViewById(R.id.checkBox_breakage);
 
-        stairs.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                checkStairs = true;
-                if(isChecked)
-                    stairs.setText("있음");
-                else
-                    stairs.setText("없음");
-            }
-        });
-
-        breakage.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                checkBreakage = true;
-                if(isChecked)
-                    breakage.setText("있음");
-                else
-                    breakage.setText("없음");
-            }
-        });
+        stairs.setOnCheckedChangeListener(this);
+        breakage.setOnCheckedChangeListener(this);
 
         imageview = (ImageView)view.findViewById(R.id.imagechoose);
-        imageview.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+        imageview.setOnClickListener(this);
+
+        Button reset = view.findViewById(R.id.reset);
+        reset.setOnClickListener(this);
+
+        Button writeFin = view.findViewById(R.id.writeFin);
+        writeFin.setOnClickListener(this);
+
+        return view;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedImageUri = data.getData();
+            imageview.setImageURI(selectedImageUri);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.imagechoose:
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent. setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intent, GET_GALLERY_IMAGE);
-            }
-        });
-
-        Button reset = view.findViewById(R.id.reset);
-        reset.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                break;
+            case R.id.reset:
                 spinner_availability.setAdapter(adapter_availability);
                 spinner_angle.setAdapter(adapter_angle);
                 spinner_type.setAdapter(adapter_type);
                 stairs.setChecked(false);
                 breakage.setChecked(false);
                 // 이미지뷰 초기화
-                checkStairs = false; checkBreakage = false;
-            }
-        });
+                break;
+            case R.id.writeFin:
+                String lat = RoadFragmentArgs.fromBundle(getArguments()).getLatitude();
+                String lon = RoadFragmentArgs.fromBundle(getArguments()).getLongitude();
+                id = appData.getString("ID", "");   // 로그인 정보
 
-        String lat = RoadFragmentArgs.fromBundle(getArguments()).getLatitude();
-        String lon = RoadFragmentArgs.fromBundle(getArguments()).getLongitude();
-        Double latitude = Double.parseDouble(lat); Double longitude = Double.parseDouble(lon);  // 위도, 경도
-        id = appData.getString("ID", "");   // 로그인 정보
-
-        Button writeFin = view.findViewById(R.id.writeFin);
-        writeFin.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.action_fragment_writeRoad_to_fragment_map);
-            }
-        });
-
-        return view;
+                if(!spinner_availability.getSelectedItem().equals("선택") &&
+                        !spinner_type.getSelectedItem().equals("선택")) {
+                    ServerRequest serverRequest = new ServerRequest(getContext());
+                    serverRequest.writeRoad(id, lat, lon, spinner_availability.getSelectedItem().toString(),
+                            spinner_type.getSelectedItem().toString(), stairs.getText().toString(),
+                            breakage.getText().toString(), spinner_angle.getSelectedItem().toString(),
+                            v, "postRoadRegister.php");
+                }
+                else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("필수 항목을 전부 입력해주십시오.")
+                            .setNegativeButton("확인", null)
+                            .create().show();
+                }
+                break;
+        }
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri selectedImageUri = data.getData();
-            imageview.setImageURI(selectedImageUri);
-        }
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(isChecked)
+            buttonView.setText("있음");
+        else
+            buttonView.setText("없음");
     }
 }

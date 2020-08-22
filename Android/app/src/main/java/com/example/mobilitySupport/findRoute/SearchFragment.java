@@ -23,8 +23,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
     SearchView searchView = null;
     ImageView closeButton = null;
 
-    String type;
-
+    private String type = null;
     private SharedPreferences appData;
 
     @Override
@@ -32,10 +31,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         super.onAttach(context);
         activity = (MainActivity) getActivity();
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         SearchView searchView = activity.findViewById(R.id.search_view);
         searchView.setVisibility(View.GONE);
     }
@@ -66,6 +65,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                SearchFragmentDirections.ActionFragmentSearchToFragmentSearchResult actionFragmentSearchToFragmentSearchResult
+                        = SearchFragmentDirections.actionFragmentSearchToFragmentSearchResult(type, query);
+                Navigation.findNavController(getView()).navigate(actionFragmentSearchToFragmentSearchResult);
                 return false;
             }
 

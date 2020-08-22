@@ -13,11 +13,8 @@ package com.example.mobilitySupport.login;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,7 +29,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONObject;
 
-public class LoginActivity<item> extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     TextInputLayout inputLayoutID = null;  // id 입력창
     TextInputLayout inputLayoutPW = null; // pw 입력창
 
@@ -115,7 +112,8 @@ public class LoginActivity<item> extends AppCompatActivity {
 
     // 아이디 비번 찾기 버튼 클릭 시
     public void findIDPW(View v) {
-
+        Intent intent = new Intent(getApplicationContext(), FindIDPWActivity.class);
+        startActivity(intent);
     }
 
     public void manageInputError() {

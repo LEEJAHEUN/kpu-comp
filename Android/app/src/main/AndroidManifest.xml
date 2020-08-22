@@ -21,10 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name="com.example.mobilitySupport.findRoute.FindRouteActivity"
-            android:label="@string/title_activity_find_route"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name="com.example.mobilitySupport.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,8 +31,11 @@
         <activity android:name="com.example.mobilitySupport.MainActivity" />
         <activity android:name="com.example.mobilitySupport.login.LoginActivity" />
         <activity android:name="com.example.mobilitySupport.join.JoinActivity" />
-        <activity android:name="com.example.mobilitySupport.map.MapFragment" />
-        <activity android:name="com.example.mobilitySupport.member.MypageFragment"/>
+        <activity android:name="com.example.mobilitySupport.login.FindIDPWActivity"/>
+        <activity android:name="com.example.mobilitySupport.appInfo.AppInfoActivity"/>
+        <activity android:name="com.example.mobilitySupport.appInfo.TermsActivity"/>
+        <activity android:name="com.example.mobilitySupport.appInfo.PersonalTermActivity" />
+        <activity android:name="com.example.mobilitySupport.member.MemberInfoActivity"/>
     </application>
 
 </manifest>

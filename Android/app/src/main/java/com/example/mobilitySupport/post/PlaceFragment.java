@@ -17,13 +17,14 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.example.mobilitySupport.R;
+import com.example.mobilitySupport.ServerRequest;
 
-public class PlaceFragment extends Fragment {
+public class PlaceFragment extends Fragment implements View.OnClickListener, CheckBox.OnCheckedChangeListener{
     private SharedPreferences appData;
     String id = null;   // 받아올 사용자 아이디
 
@@ -39,8 +40,6 @@ public class PlaceFragment extends Fragment {
     ArrayAdapter<String> adapter_type = null;
 
     private final int GET_GALLERY_IMAGE = 200;
-    Boolean checkElevator = false;  // true 일 경우 서버에 값 전달
-    Boolean checkWheel = false;     //
 
     @Nullable
     @Override
@@ -65,71 +64,76 @@ public class PlaceFragment extends Fragment {
         elevator = view.findViewById(R.id.checkBox_elevator);
         wheel = view.findViewById(R.id.checkBox_wheel);
 
-        elevator.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                checkElevator = true;
-                if(isChecked)
-                    elevator.setText("있음");
-                else
-                    elevator.setText("없음");
-            }
-        });
+        elevator.setOnCheckedChangeListener(this);
 
-        wheel.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                checkWheel = true;
-                if(isChecked)
-                    wheel.setText("있음");
-                else
-                    wheel.setText("없음");
-            }
-        });
+        wheel.setOnCheckedChangeListener(this);
 
         imageview = (ImageView)view.findViewById(R.id.imagechoose);
-        imageview.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent. setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                startActivityForResult(intent, GET_GALLERY_IMAGE);
-            }
-        });
+        imageview.setOnClickListener(this);
 
         Button reset = view.findViewById(R.id.reset);
-        reset.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                spinner_availability.setAdapter(adapter_availability);
-                spinner_type.setAdapter(adapter_type);
-                elevator.setChecked(false);
-                wheel.setChecked(false);
-                // 이미지 뷰 초기화
-                checkElevator = false; checkWheel = false;
-            }
-        });
-
-        String lat = PlaceFragmentArgs.fromBundle(getArguments()).getLatitude();
-        String lon = PlaceFragmentArgs.fromBundle(getArguments()).getLongitude();
-        Double latitude = Double.parseDouble(lat); Double longitude = Double.parseDouble(lon);  // 위도, 경도
-        id = appData.getString("ID", "");   // 로그인 정보
+        reset.setOnClickListener(this);
 
         Button writeFin = view.findViewById(R.id.writeFin);
-        writeFin.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) { // 작성 완료 버튼 클릭 시
-                Navigation.findNavController(v).navigate(R.id.action_fragment_writePlace_to_fragment_map); // 화면 이동
-            }
-        });
+        writeFin.setOnClickListener(this);
+
         return view;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri selectedImageUri = data.getData();
             imageview.setImageURI(selectedImageUri);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.imagechoose:
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent. setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                startActivityForResult(intent, GET_GALLERY_IMAGE);
+                break;
+            case R.id.reset:
+                spinner_availability.setAdapter(adapter_availability);
+                spinner_type.setAdapter(adapter_type);
+                elevator.setChecked(false);
+                wheel.setChecked(false);
+                // 이미지 뷰 초기화 -> 아직 남음
+                break;
+            case R.id.writeFin:
+                String lat = PlaceFragmentArgs.fromBundle(getArguments()).getLatitude();
+                String lon = PlaceFragmentArgs.fromBundle(getArguments()).getLongitude();
+                id = appData.getString("ID", "");   // 로그인 정보
+
+                if(!spinner_availability.getSelectedItem().equals("선택") &&
+                        !spinner_type.getSelectedItem().equals("선택")){
+                    ServerRequest serverRequest = new ServerRequest(getContext());
+                    serverRequest.writePlace(id, lat, lon, spinner_availability.getSelectedItem().toString(),
+                            spinner_type.getSelectedItem().toString(), elevator.getText().toString(),
+                            wheel.getText().toString(), v, "postPlaceRegister.php");
+                }
+                else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("필수 항목을 전부 입력해주십시오.")
+                            .setNegativeButton("확인", null)
+                            .create()
+                            .show();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()){
+            case R.id.checkBox_elevator: case R.id.checkBox_wheel:
+                if(isChecked)
+                    buttonView.setText("있음");
+                else
+                    buttonView.setText("없음");
         }
     }
 }

@@ -32,7 +32,8 @@
 
          <item
             android:id="@+id/appInformation"
-         android:title="앱 정보" />
+            android:title="앱 정보"
+            android:onClick="onOptionsItemSelected"/>
     </group>
 
     <item

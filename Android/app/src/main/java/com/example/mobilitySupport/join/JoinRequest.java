@@ -12,7 +12,7 @@ public class JoinRequest extends StringRequest {
     private Map<String, String> parameters;
 
     public JoinRequest(String userID, String userPassword, String userMail, String userType, Response.Listener<String> listener){
-        super(Method.POST, URL, listener, null);//해당 URL에 POST방식으로 파마미터들을 전송함
+        super(Method.POST, URL, listener, null);//해당 URL에 POST방식으로 파라미터들을 전송함
         parameters = new HashMap<>();
         parameters.put("userID", userID);
         parameters.put("userPassword", userPassword);
