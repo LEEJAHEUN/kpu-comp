@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.mobilitySupport.post.ManageRoadPostActivity"
+    android:background="#F1BC20">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/roadlistfragment"
+        android:name="com.example.mobilitySupport.post.RoadListFragment"
+        tools:layout="@layout/managepost_road_activity">
+    </androidx.fragment.app.FragmentContainerView>
+
+</RelativeLayout>

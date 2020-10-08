@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class MemberInfoGetRequest extends StringRequest {
     final static private String URL = "http://121.168.1.81/memberInfoGet.php";
+    //final static private String URL = "http://192.168.81.240/memberInfoGet.php";    // 기본 주소에 추가하여 사용
+
     private Map<String, String> parameters;
 
     public MemberInfoGetRequest(String userID, Response.Listener<String> listener){

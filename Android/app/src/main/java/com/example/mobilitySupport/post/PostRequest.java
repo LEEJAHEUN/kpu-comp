@@ -1,19 +1,18 @@
-package com.example.mobilitySupport;
+package com.example.mobilitySupport.post;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
+import android.content.Intent;
 import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.navigation.Navigation;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mobilitySupport.MainActivity;
 
 import org.json.JSONObject;
 
@@ -21,14 +20,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 // 서버 요청 클래스
-public class ServerRequest {
+public class PostRequest {
 
     private String baseUrl = "http://121.168.1.81/";    // 기본 주소에 추가하여 사용
+//    private String baseUrl = "http://192.168.81.240/";    // 기본 주소에 추가하여 사용
+
     private Map<String, String> parameters;
     private Context context;
 
     // 해당 프래그먼트의 context 보냄(getContext() 이용)
-    public ServerRequest(Context context){
+    public PostRequest(Context context){
         this.context = context;
     }
 
@@ -82,10 +83,18 @@ public class ServerRequest {
                                         .setNegativeButton("확인", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                if(requestUrl.equals("postPlaceRegister.php"))
-                                                    Navigation.findNavController(v).navigate(R.id.action_fragment_writePlace_to_fragment_map);
-                                                else if(requestUrl.equals("postRoadRegister.php"))
-                                                    Navigation.findNavController(v).navigate(R.id.action_fragment_writeRoad_to_fragment_map);
+                                                if(requestUrl.equals("postPlaceRegister.php")){
+                                                    //페이지 이동
+                                                    Intent intent = new Intent(context, MainActivity.class);
+                                                    context.startActivity(intent);
+//                                                    Navigation.findNavController(v).navigate(R.id.action_fragment_writePlace_to_fragment_map);
+                                                }
+                                                else if(requestUrl.equals("postRoadRegister.php")){
+                                                    //페이지 이동
+                                                    Intent intent = new Intent(context, MainActivity.class);
+                                                    context.startActivity(intent);
+//                                                    Navigation.findNavController(v).navigate(R.id.action_fragment_writeRoad_to_fragment_map);
+                                                }
                                             }
                                         })
                                         .create().show();

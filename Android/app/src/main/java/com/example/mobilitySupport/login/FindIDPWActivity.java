@@ -1,28 +1,21 @@
 package com.example.mobilitySupport.login;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mobilitySupport.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONObject;
-
-import java.util.Map;
 
 public class FindIDPWActivity extends AppCompatActivity {
     TextInputLayout emailLayout;
@@ -32,6 +25,7 @@ public class FindIDPWActivity extends AppCompatActivity {
     TextInputEditText findByID;
 
     private String baseUrl = "http://121.168.1.81/";    // 기본 주소에 추가하여 사용
+    //private String baseUrl = "http://192.168.81.240/";    // 기본 주소에 추가하여 사용
     String type = null;
     Response.Listener<String>  responseListener;
 

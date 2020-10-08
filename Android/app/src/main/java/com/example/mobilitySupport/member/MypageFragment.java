@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.mobilitySupport.R;
 
@@ -39,6 +40,14 @@ public class MypageFragment extends Fragment {
             }
         });
 
+        //제보글 관리로 이동
+        postmanageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Navigation.findNavController(v).navigate(R.id.action_fragment_mypage_to_managePostFragment);
+            }
+        });
 
         return view;
     }

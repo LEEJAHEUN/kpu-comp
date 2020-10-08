@@ -7,12 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,30 +24,30 @@ import com.example.mobilitySupport.MainActivity;
 import com.example.mobilitySupport.R;
 import com.skt.Tmap.TMapPoint;
 
+import java.util.ArrayList;
+
 public class FindRouteFragment extends Fragment implements View.OnClickListener {
     MainActivity activity = null;
-    Boolean routeType = true;   // true: 빠른 길찾기, false: 회피 길찾기
 
-    ImageButton route;
-    ImageButton avoidRoute;
-    TextView start;
-    TextView end;
-
-    TMapPoint start_point = null;
-    TMapPoint end_point = null;
-
-    RecyclerView rootHistory;
+    ImageButton route, avoidRoute;
+    TextView start, end;
+    CardView rootHistory;
+    ProgressBar progressBar;
+    SearchView searchView;
 
     private SharedPreferences appData;
     SharedPreferences.Editor editor;
-    String startLat, startLong, endLat, endLong;
 
-    SearchView searchView;
+    TMapPoint start_point = null, end_point = null;
+    String startLat, startLong, endLat, endLong;
+    ArrayList<String> point = new ArrayList<>();
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         activity = (MainActivity) getActivity();
+        activity.addPostMarker();
+//        activity.removePostMarker();
     }
 
     @Override
@@ -52,11 +55,13 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener 
         super.onDestroyView();
         activity.getSupportActionBar().show();
         activity.removePath();
+//        activity.addPostMarker();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -81,24 +86,26 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener 
         searchView.setQuery("", false);
 
         rootHistory = view.findViewById(R.id.rootHistory);
+        progressBar = view.findViewById(R.id.progressBar);
         view.findViewById(R.id.end).setOnClickListener(this);
         route = view.findViewById(R.id.route);
         route.setOnClickListener(this);
-        route.setSelected(true);
-
         avoidRoute = view.findViewById(R.id.avoidRoute);
         avoidRoute.setOnClickListener(this);
-
         start = view.findViewById(R.id.start);
         start.setOnClickListener(this);
         end = view.findViewById(R.id.arrive);
         end.setOnClickListener(this);
-
         view.findViewById(R.id.change).setOnClickListener(this);
 
         appData = getActivity().getSharedPreferences("appData", Context.MODE_PRIVATE);
         editor = appData.edit();
 
+        String routeType = appData.getString("routeType", "");
+        if(routeType.equals(""))
+            checkButton(routeType, "route");
+        else
+            checkButton(routeType, "");
 
         setFindRoute();
         return view;
@@ -112,16 +119,17 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener 
                 editor.remove("EndLat"); editor.remove("EndLong");
                 editor.commit();    // 길찾기 종료 시 저장된 좌표값 삭제
                 // 메인화면으로 이동
+//                activity.removeMarker();
                 Navigation.findNavController(v).navigate(R.id.action_fragment_findRoute_to_fragment_map);
                 searchView.clearFocus(); searchView.setIconified(true);
                 break;
             case R.id.route:
-                routeType = true;
-                route.setSelected(true); avoidRoute.setSelected(false);
+                checkButton("", "route");
+                setFindRoute();
                 break;
             case R.id.avoidRoute:
-                routeType = false;
-                route.setSelected(false); avoidRoute.setSelected(true);
+                checkButton("", "avoidRoute");
+                setFindRoute();
                 break;
             case R.id.start :
                 FindRouteFragmentDirections.ActionFragmentFindRouteToFragmentSearch actionFragmentFindRouteToFragmentSearchStart
@@ -170,10 +178,34 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener 
 
         //출발지, 도착지 모두 null이 아닌 경우
         if( (!(startLat.equals("")) && (!(endLat.equals("")))) ){
-            rootHistory.setVisibility(View.INVISIBLE);
+            String routeType = appData.getString("routeType", "");
             //최단거리 구함
-            activity.getShortestPath(start_point, end_point);
+            if(routeType.equals("route")) {
+                rootHistory.setVisibility(View.INVISIBLE);
+                activity.getShortestPath(start_point, end_point, null,  0);
+            }
+            else{
+                // 거리가 2km 이하일 경우
+                // 회피 경로 찾기
+                double distance = getDistance();
+                rootHistory.setVisibility(View.VISIBLE);
+
+                if(distance > 2) {
+                    Toast.makeText(activity.getApplicationContext(), "회피 경로 찾기는 두 지점 사이의 거리가 \n2km 이하인 경우에만 가능합니다.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    getPostLocation(distance);
+                }
+            }
         }
+    }
+
+    public void getPostLocation(double distance){
+        // 서버로부터 제보글 목록 받기
+        progressBar.setVisibility(View.VISIBLE);
+        PostLocationRequest request = new PostLocationRequest(getContext(), activity, start_point, end_point, distance, rootHistory, progressBar);
+        request.sendPostLocation("getLocation.php");
+
     }
 
 
@@ -194,4 +226,43 @@ public class FindRouteFragment extends Fragment implements View.OnClickListener 
         endLong = appData.getString("EndLong", "");
     }
 
+    public void checkButton(String routeType, String button){
+        if(routeType.equals("") || !button.equals("")) {
+            editor.putString("routeType", button);
+            editor.apply(); editor.commit();
+        }
+
+        if(routeType.equals("avoidRoute") || button.equals("avoidRoute")) {
+            route.setSelected(false); avoidRoute.setSelected(true);
+        }
+        else {
+            route.setSelected(true); avoidRoute.setSelected(false);
+        }
+    }
+
+    public double getDistance(){
+        double start_lat = start_point.getLatitude();
+        double start_lon = start_point.getLongitude();
+        double end_lat = end_point.getLatitude();
+        double end_lon = end_point.getLongitude();
+
+        double theta = start_lon - end_lon;
+        double dist = Math.sin(deg2rad(start_lat)) * Math.sin(deg2rad(end_lat))
+                + Math.cos(deg2rad(start_lat)) * Math.cos(deg2rad(end_lat))
+                * Math.cos(deg2rad(theta));
+
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        dist = dist * 1.609344;
+
+        return dist;
+    }
+
+    public static double deg2rad(double deg){
+        return (deg * Math.PI / 180.0);
+    }
+    public static double rad2deg(double rad){
+        return (rad * 180 / Math.PI);
+    }
 }

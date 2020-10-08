@@ -30,6 +30,7 @@ public class MapFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         activity = (MainActivity) getActivity();
+        activity.addPostMarker();
     }
 
     @Override

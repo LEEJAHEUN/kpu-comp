@@ -9,6 +9,8 @@ import java.util.Map;
 public class JoinRequest extends StringRequest {
 
     final static private String URL = "http://121.168.1.81/register.php";
+    //final static private String URL = "http://192.168.81.240/register.php";    // 기본 주소에 추가하여 사용
+
     private Map<String, String> parameters;
 
     public JoinRequest(String userID, String userPassword, String userMail, String userType, Response.Listener<String> listener){

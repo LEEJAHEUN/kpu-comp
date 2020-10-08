@@ -3,8 +3,12 @@ package com.example.mobilitySupport.post;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +26,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.example.mobilitySupport.R;
-import com.example.mobilitySupport.ServerRequest;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class PlaceFragment extends Fragment implements View.OnClickListener, CheckBox.OnCheckedChangeListener{
     private SharedPreferences appData;
@@ -80,6 +87,7 @@ public class PlaceFragment extends Fragment implements View.OnClickListener, Che
         return view;
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
@@ -93,7 +101,7 @@ public class PlaceFragment extends Fragment implements View.OnClickListener, Che
         switch (v.getId()){
             case R.id.imagechoose:
                 Intent intent = new Intent(Intent.ACTION_PICK);
-                intent. setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intent, GET_GALLERY_IMAGE);
                 break;
             case R.id.reset:
@@ -110,8 +118,8 @@ public class PlaceFragment extends Fragment implements View.OnClickListener, Che
 
                 if(!spinner_availability.getSelectedItem().equals("선택") &&
                         !spinner_type.getSelectedItem().equals("선택")){
-                    ServerRequest serverRequest = new ServerRequest(getContext());
-                    serverRequest.writePlace(id, lat, lon, spinner_availability.getSelectedItem().toString(),
+                    PostRequest postRequest = new PostRequest(getContext());
+                    postRequest.writePlace(id, lat, lon, spinner_availability.getSelectedItem().toString(),
                             spinner_type.getSelectedItem().toString(), elevator.getText().toString(),
                             wheel.getText().toString(), v, "postPlaceRegister.php");
                 }

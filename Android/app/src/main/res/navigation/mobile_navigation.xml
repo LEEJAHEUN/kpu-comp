@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_fragment_map_to_appInfoFragment"
             app:destination="@id/appInfoFragment" />
+        <action
+            android:id="@+id/action_fragment_map_to_managePostFragment"
+            app:destination="@id/managePostFragment" />
 
     </fragment>
 
@@ -52,7 +55,11 @@
     <fragment
         android:id="@+id/fragment_mypage"
         android:name="com.example.mobilitySupport.member.MypageFragment"
-        tools:layout="@layout/fragment_mypage"/>
+        tools:layout="@layout/fragment_mypage">
+        <action
+            android:id="@+id/action_fragment_mypage_to_managePostFragment"
+            app:destination="@id/managePostFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_point"
@@ -125,7 +132,8 @@
     <fragment
         android:id="@+id/appInfoFragment"
         android:name="com.example.mobilitySupport.appInfo.AppInfoFragment"
-        android:label="AppInfoFragment" />
+        android:label="AppInfoFragment"
+        tools:layout="@layout/appinfo_activity"/>
 
     <fragment
         android:id="@+id/fragment_search_result"
@@ -144,4 +152,11 @@
             android:name="searchWord"
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/managePostFragment"
+        android:name="com.example.mobilitySupport.post.ManagePostFragment"
+        android:label="ManagePostFragment"
+        tools:layout="@layout/fragment_choose_posttype"/>
+
 </navigation>

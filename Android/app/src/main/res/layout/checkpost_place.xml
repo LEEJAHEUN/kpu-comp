@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F1BC20"
-    tools:context=".post.ChoosePostTypeFragment">
+    tools:context=".post.CheckPlacePostActivity">
 
     <TextView
         android:id="@+id/textView3"
@@ -17,37 +17,11 @@
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.188"
+        app:layout_constraintHorizontal_bias="0.126"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.213"
+        app:layout_constraintVertical_bias="0.313"
         tools:ignore="MissingConstraints" />
-
-    <ImageView
-        android:id="@+id/imagechoose_update_place"
-        android:layout_width="304dp"
-        android:layout_height="107dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.523"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.703"
-        app:srcCompat="@drawable/baseline_add_photo_alternate_black_48"
-        tools:ignore="MissingConstraints" />
-
-    <Spinner
-        android:id="@+id/availability_update_place"
-        android:layout_width="107dp"
-        android:layout_height="53dp"
-        android:spinnerMode="dropdown"
-        android:textColor="#101010"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.871"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.097" />
 
     <TextView
         android:id="@+id/textView"
@@ -59,38 +33,24 @@
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintHorizontal_bias="0.256"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499"
+        app:layout_constraintVertical_bias="0.577"
         tools:ignore="MissingConstraints" />
 
-    <Spinner
-        android:id="@+id/spinner_type_update_place"
+    <TextView
+        android:id="@+id/type_check"
         android:layout_width="107dp"
         android:layout_height="53dp"
-        android:spinnerMode="dropdown"
         android:textColor="#101010"
+        android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.871"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.205" />
-
-    <Button
-        android:id="@+id/reset_up_place"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#F4F0F0"
-        android:text="입력 초기화"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.309"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.907" />
+        app:layout_constraintVertical_bias="0.326" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -101,25 +61,11 @@
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.286"
+        app:layout_constraintHorizontal_bias="0.292"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.406"
+        app:layout_constraintVertical_bias="0.484"
         tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/modifyFin_place"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#F8F5F5"
-        android:text="수정완료"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.752"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.907" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -130,61 +76,105 @@
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.218"
+        app:layout_constraintHorizontal_bias="0.175"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.113" />
+        app:layout_constraintVertical_bias="0.195" />
 
-    <CheckBox
-        android:id="@+id/checkBox_elevator_up_place"
+    <TextView
+        android:id="@+id/elevator_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="없음"
-        android:textColorLink="@color/colorAccent"
+        android:textSize="18sp"
+        android:textColor="#101010"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.813"
+        app:layout_constraintHorizontal_bias="0.72"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.406" />
+        app:layout_constraintVertical_bias="0.484" />
 
-    <CheckBox
-        android:id="@+id/checkBox_wheel_up_place"
+    <TextView
+        android:id="@+id/wheel_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="없음"
+        android:textSize="18sp"
+        android:textColor="#101010"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.813"
+        app:layout_constraintHorizontal_bias="0.72"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
+        app:layout_constraintVertical_bias="0.577" />
 
     <ImageView
-        android:id="@+id/imageView_update_place"
+        android:id="@+id/imageView"
         android:layout_width="350dp"
         android:layout_height="2dp"
         android:background="@color/wallet_bright_foreground_holo_light"
         android:src="?attr/editTextBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.323" />
+        app:layout_constraintVertical_bias="0.399" />
+
+    <TextView
+        android:id="@+id/availability_check"
+        android:layout_width="107dp"
+        android:layout_height="53dp"
+        android:textColor="#101010"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <Button
+        android:id="@+id/modify_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#F4F0F0"
+        android:text="수정"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.294"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.751" />
+
+    <Button
+        android:id="@+id/delete_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#F8F5F5"
+        android:text="삭제"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.736"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.751" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="필수 항목"
+        android:text="* 필수 항목"
         android:textColor="#121111"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.887"
+        app:layout_constraintHorizontal_bias="0.893"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.037" />
+        app:layout_constraintVertical_bias="0.117" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

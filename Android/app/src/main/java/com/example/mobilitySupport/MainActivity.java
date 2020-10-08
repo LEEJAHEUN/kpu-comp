@@ -6,16 +6,22 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +37,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.mobilitySupport.login.LoginActivity;
+import com.example.mobilitySupport.post.AllPostServerRequest;
+import com.example.mobilitySupport.post.ManagePostFragment;
+import com.example.mobilitySupport.post.MyPostServerRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -46,11 +55,13 @@ import com.skt.Tmap.TMapAddressInfo;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapInfo;
 import com.skt.Tmap.TMapMarkerItem;
+import com.skt.Tmap.TMapPOIItem;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback {
@@ -69,8 +80,11 @@ public class MainActivity extends AppCompatActivity
     int REQUEST_CHECK_SETTINGS = 100;                   // GPS 설정 코드
     LocationManager locationManager = null;
 
-    double latitude = 0;
-    double longitude = 0;
+    double latitude = 0, longitude = 0;
+
+    ArrayList<TMapPoint> allPostPoint = new ArrayList();     //지도에 표시할 마커
+    ArrayList<String>latList = new ArrayList<String>();     //마커에 사용할 위도, 경도
+    ArrayList<String>lonList = new ArrayList<String>();
 
     int updateTime = 1000;      // 현재 위치 갱신 시간
     int updateDistance = 1;     // 현재 위치 갱신 이동 거리
@@ -126,7 +140,6 @@ public class MainActivity extends AppCompatActivity
 
         //메인 화면(app_bar_main)의 지도 부분 레이아웃을 가져와 대입
         linearLayout = (LinearLayout) findViewById(R.id.linearLayoutTmap);
-
         //지도 생성
         tMapView = new TMapView(this);
         tMapView.setSKTMapApiKey(getString(R.string.apiKey));
@@ -135,6 +148,86 @@ public class MainActivity extends AppCompatActivity
         //지도 띄울 때 확대 정도
         tMapView.setZoomLevel(17);
         tMapView.setMapType(TMapView.MAPTYPE_STANDARD);
+
+/*        //서버 연결, 위치 좌표 받아옴(장소)
+        AllPostServerRequest allPostServerRequest = new AllPostServerRequest(MainActivity.this);
+        allPostServerRequest.getAllPost(tMapView,"getAllPost.php");*/
+
+        //서버로부터 받아온 제보글이 있는지 확인함
+        Intent intent = getIntent();
+        String[] allPostList = intent.getStringArrayExtra("allPostList");
+
+        //받아온 제보글이 없으면 서버로부터 다시 받아옴
+        if(allPostList==null){
+            //서버 연결, 위치 좌표 받아옴(장소)
+            //주석처리하고도 마커 뜨는지 확인
+            AllPostServerRequest allPostServerRequest = new AllPostServerRequest(MainActivity.this);
+            allPostServerRequest.getAllPost(tMapView,"getAllPost.php");
+
+            intent = getIntent();
+            allPostList = intent.getStringArrayExtra("allPlaceList");
+        }
+
+        if(allPostList !=null){
+//            for(int i=0;i<allPostList.length;i++){
+//                System.out.println("서버로부터 받아온 제보글 목록: "+allPostList[i]);
+//            }
+            //받아온 좌표를 경도, 위도로 분리(위도, 경도가 장소->길 순으로 저장됨)
+            for(int i=0;i<(allPostList.length);){
+                latList.add(allPostList[i]);
+                lonList.add(allPostList[i+1]);
+
+                i+=2;
+            }
+            /*System.out.println("나눈 위도, 경도: ");
+            //위도, 경도로 나뉘었는지 확인
+            for(String s : latList){ System.out.println(s); }
+            for(String s : lonList){ System.out.println(s); }*/
+        }
+
+        //제보글 위에 마커 표시
+        addPostMarker();
+
+        //마커 클릭 이벤트 설정
+        tMapView.setOnClickListenerCallBack(new TMapView.OnClickListenerCallback() {
+            @Override
+            public boolean onPressEvent(ArrayList<TMapMarkerItem> markerList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
+                return false;
+            }
+
+            @Override
+            public boolean onPressUpEvent(ArrayList<TMapMarkerItem> markerList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
+                int tmapItemSize = markerList.size();
+
+                for(int i=0;i<tmapItemSize;i++){
+/*                    Log.e("express","onPressUpEvent="+markerList.get(i).getID());
+                    Log.e("express","onPressUpEvent="+markerList.get(i).getTMapPoint());
+                    Log.e("express","onPressUpEvent="+markerList.get(i).getName());*/
+                    //클릭한 마커의 좌표를 얻어옴
+                    final TMapPoint itemPoint = markerList.get(i).getTMapPoint();
+
+/*                    //경도,위도를 번들에 저장
+                    //(같은 위치의 제보글 목록을 보여주기 위해) 길, 장소 선택 프래그먼트로 이동
+                    ManagePostFragment managePostFragment = new ManagePostFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putDouble("markerLat",itemPoint.getLatitude());
+                    bundle.putDouble("markerLon",itemPoint.getLongitude());
+                    managePostFragment.setArguments(bundle);
+                    System.out.println("마커 클릭 시 전달되는 위치:"+bundle);
+                    navController.navigate(R.id.action_fragment_map_to_managePostFragment,bundle);*/
+
+                    //클릭한 좌표의 제보글을 찾기 위해 번들을 MyPostServerRequest로 전송(final 맞는지 확인)
+                    final String markerLat = Double.toString(itemPoint.getLatitude());
+                    final String markerLon = Double.toString(itemPoint.getLongitude());
+                    System.out.println("마커 클릭 시 전달되는 위치:"+markerLat+", "+markerLon);
+                    MyPostServerRequest myPostServerRequest = new MyPostServerRequest(MainActivity.this);
+                    myPostServerRequest.getPostRoad(markerLat, markerLon, tMapView, "readPostRoad.php");
+                    myPostServerRequest.getPostPlace(markerLat, markerLon, tMapView, "readPostPlace.php");
+                }
+
+                return false;
+            }
+        });
 
         //화면에 지도 표시
         linearLayout.addView(tMapView);
@@ -180,6 +273,25 @@ public class MainActivity extends AppCompatActivity
             case R.id.appInformation:
                 drawer.closeDrawers();
                 navController.navigate(R.id.action_fragment_map_to_appInfoFragment);
+                return true;
+
+            //알림 선택 시
+            case R.id.fragment_alarm:
+                final Switch switchAlarm = (Switch)findViewById(R.id.switchAlarm);
+
+                switchAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        //알림이 체크되어있으면 마커 표시
+                        if(switchAlarm.isChecked()){
+                            addPostMarker();
+                        }
+                        else{
+                            removePostMarker();
+                        }
+                    }
+                });
+
                 return true;
 
             default:
@@ -401,28 +513,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     //출발지, 목적지를 받아 (최단)경로 표시
-    public void getShortestPath(TMapPoint start, TMapPoint arrive) {
-        //출발지의 위도, 경도(start.latitude, start.longitude)
-        start = new TMapPoint(start.getLatitude(), start.getLongitude());
-        //목적지의 위도, 경도
-        arrive = new TMapPoint(arrive.getLatitude(), arrive.getLongitude());
-
-        //출발지, 목적지를 마커로 표시
-        TMapMarkerItem startMark = new TMapMarkerItem();
-        TMapMarkerItem endMark = new TMapMarkerItem();
-        startMark.setTMapPoint(start);
-        endMark.setTMapPoint(arrive);
-
-        //출발지, 도착지에 마커 추가
-        //tMapView.addMarkerItem("start",startMark);
-        //tMapView.addMarkerItem("arrive",endMark);
-
-        //보행자 (최단)경로를 요청함(경로 종류, 출발지, 도착지, 검색결과를 받는 인터페이스 함수)
+    public void getShortestPath(final TMapPoint start, TMapPoint arrive, ArrayList<TMapPoint> passList, int searchOption) {
         TMapData data = new TMapData();
+
         final TMapPoint finalStart = start;
         final TMapPoint finalArrive = arrive;
-        data.findPathDataWithType(TMapData.TMapPathType.PEDESTRIAN_PATH, start, arrive, new TMapData.FindPathDataListenerCallback() {
 
+        //보행자 (최단)경로를 요청함(경로 종류, 출발지, 도착지, 검색결과를 받는 인터페이스 함수)
+        data.findPathDataWithType(TMapData.TMapPathType.PEDESTRIAN_PATH, start, arrive, passList, searchOption, new TMapData.FindPathDataListenerCallback() {
             //보행자 (최단)경로 생성
             @Override
             public void onFindPathData(final TMapPolyLine path) {
@@ -433,13 +531,14 @@ public class MainActivity extends AppCompatActivity
                         //보여줄 경로(선)의 두께, 색상 설정
                         path.setLineWidth(5);
                         path.setLineColor(Color.RED);
+
                         //경로를 지도에 표시함
                         tMapView.addTMapPath(path);
 
                         //결과에 맞춰 중심 좌표, 확대 정도 변경
-                        ArrayList<TMapPoint> point = new ArrayList<TMapPoint>();
-                        point.add(finalStart);
-                        point.add(finalArrive);
+                        ArrayList<TMapPoint> point = new ArrayList<>();
+                        point.add(finalStart); point.add(finalArrive);
+
                         TMapInfo info = tMapView.getDisplayTMapInfo(point);
                         tMapView.setCenterPoint(info.getTMapPoint().getLongitude(),info.getTMapPoint().getLatitude());
                         //+0.0020
@@ -450,15 +549,72 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    public void getAvoidPath(final List<TMapPoint> list, final ArrayList<TMapPoint> point) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TMapPolyLine tMapPolyLine = new TMapPolyLine();
+                tMapPolyLine.setLineColor(Color.RED);
+                tMapPolyLine.setLineWidth(5);
+
+                for(int i=0;i<list.size();i++){
+                    tMapPolyLine.addLinePoint(list.get(i));
+                }
+
+                tMapView.addTMapPath(tMapPolyLine);
+
+                addPostMarker();
+
+                TMapInfo info = tMapView.getDisplayTMapInfo(point);
+                tMapView.setCenterPoint(info.getTMapPoint().getLongitude(),info.getTMapPoint().getLatitude());
+                tMapView.setZoomLevel(info.getTMapZoomLevel()-1);
+            }
+        });
+    }
+
+    //제보글 위치의 마커를 지도에 표시(다중마커)
+    public void addPostMarker(){
+        for(int i=0;i<latList.size();i++){
+            //제보글 위치의 위도, 경도를 받아와 저장
+            TMapPoint postPoint = convDouble(latList.get(i),lonList.get(i));
+            allPostPoint.add(postPoint);
+        }
+
+        //마커목록에 제대로 add되었는지 확인
+//        for(TMapPoint t : allPostPoint){
+//            System.out.println("목록에 저장된 tMapPoint: " + t);
+//        }
+
+        //마커 아이콘 지정
+        final Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),R.drawable.ic_road);
+
+        //목록에 저장된 만큼 마커 추가
+        for(int i=0;i<allPostPoint.size();i++){
+            TMapMarkerItem postMarker = new TMapMarkerItem();
+            postMarker.setIcon(bitmap);//마커 아이콘 지정
+            postMarker.setPosition(0.5f,1.0f);  //마커가 표시되는 위치를 이미지의 중앙,하단으로 설정
+//            postMarker.setTMapPoint((TMapPoint) allPostPoint.get(i));   //allPostPoint에 저장된 tMapPoint를 중심점으로 사용
+            postMarker.setTMapPoint(allPostPoint.get(i));   //allPostPoint에 저장된 tMapPoint를 중심점으로 사용
+            postMarker.setName("Marker"+i);   //마커 타이틀 지정
+            tMapView.addMarkerItem("postMarker"+i, postMarker);    //지도에 마커 추가
+//            System.out.println("추가한 마커id: "+postMarker.getID()+"좌표: "+postMarker.getTMapPoint());
+        }
+    }
+
+    //문자열을 실수로 형변환
+    public TMapPoint convDouble(String sLat, String sLong){
+        //double형으로 형변환
+        double dLat = Double.parseDouble(sLat);
+        double dLong = Double.parseDouble(sLong);
+        TMapPoint point = new TMapPoint(dLat, dLong);
+        return  point;
+    }
+
     //지도에 표시한 경로 삭제
-    public void removePath(){
-        tMapView.removeTMapPath();
-    }
+    public void removePath(){ tMapView.removeTMapPath(); }
+    public TMapPoint getCenter(){ return tMapView.getCenterPoint(); }
+    public TMapPoint getLocation(){ return new TMapPoint(latitude, longitude); }
 
-    public TMapPoint getCenter(){return tMapView.getCenterPoint();}
-
-
-    public TMapPoint getLocation(){
-        return new TMapPoint(latitude, longitude);
-    }
+    //지도에 표시한 마커 삭제
+    public void removePostMarker(){tMapView.removeAllMarkerItem(); }
 }

@@ -22,7 +22,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.example.mobilitySupport.R;
-import com.example.mobilitySupport.ServerRequest;
 
 public class RoadFragment extends Fragment implements View.OnClickListener, CheckBox.OnCheckedChangeListener{
     private SharedPreferences appData;
@@ -117,8 +116,8 @@ public class RoadFragment extends Fragment implements View.OnClickListener, Chec
 
                 if(!spinner_availability.getSelectedItem().equals("선택") &&
                         !spinner_type.getSelectedItem().equals("선택")) {
-                    ServerRequest serverRequest = new ServerRequest(getContext());
-                    serverRequest.writeRoad(id, lat, lon, spinner_availability.getSelectedItem().toString(),
+                    PostRequest postRequest = new PostRequest(getContext());
+                    postRequest.writeRoad(id, lat, lon, spinner_availability.getSelectedItem().toString(),
                             spinner_type.getSelectedItem().toString(), stairs.getText().toString(),
                             breakage.getText().toString(), spinner_angle.getSelectedItem().toString(),
                             v, "postRoadRegister.php");

@@ -21,7 +21,8 @@
         <item
             android:id="@+id/fragment_alarm"
             android:checkable="false"
-            android:title="알림"
+            android:title="마커 표시"
+            android:onClick="onOptionsItemSelected"
             app:actionLayout="@layout/switch_item"
             app:showAsAction="always" />
 
