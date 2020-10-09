@@ -23,7 +23,7 @@
 
         <Button
             android:id="@+id/choosePoint"
-            android:layout_width="350dp"
+            android:layout_width="300dp"
             android:layout_height="45dp"
             android:layout_gravity="bottom|center"
             android:layout_marginBottom="15dp"

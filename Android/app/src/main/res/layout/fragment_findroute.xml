@@ -62,12 +62,12 @@
 
             <TextView
                 android:id="@+id/arrive"
-                android:layout_width="330dp"
+                android:layout_width="300dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="100dp"
                 android:background="@color/colorPrimaryLight"
                 android:gravity="center_vertical"
-                android:hint="   도착"
+                android:hint="  도착"
                 android:padding="3dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -79,12 +79,12 @@
 
             <TextView
                 android:id="@+id/start"
-                android:layout_width="330dp"
+                android:layout_width="300dp"
                 android:layout_height="40dp"
                 android:background="@color/colorPrimaryLight"
                 android:editable="false"
                 android:gravity="center_vertical"
-                android:hint="   출발"
+                android:hint="  출발"
                 android:paddingLeft="3dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
